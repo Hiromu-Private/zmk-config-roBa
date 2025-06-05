@@ -1,7 +1,10 @@
 #include <behaviors.dtsi>
+#include <input/processors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+
+#define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
 
 &mt {
     flavor = "balanced";
@@ -52,7 +55,6 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
             bindings = <&mo>, <&to_layer_0>;
-
             #binding-cells = <2>;
             tapping-term-ms = <200>;
         };
@@ -128,4 +130,8 @@
             >;
         };
     };
+};
+
+&mkp_input_listener {
+    input-processors = <&zip_temp_layer MOUSE 250>;
 };
