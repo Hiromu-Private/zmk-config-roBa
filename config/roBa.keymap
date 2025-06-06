@@ -11,15 +11,7 @@
     quick-tap-ms = <0>;
 };
 
-&sl {
-    release-after-ms = <250>; // ダブルクリックに必要な時間を設定
-};
-
-&mkp_input_listener {
-    input-processors = <&zip_temp_layer MOUSE 250>;
-};
-
- / {
+/ {
     combos {
         compatible = "zmk,combos";
 
@@ -62,20 +54,6 @@
             #binding-cells = <0>;
             bindings = <&kp LG(LEFT_ARROW)>;
             label = "BROWSER_BACK";
-        };
-
-        mkp_exit_AML: mkp_exit_AML {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&sl MOUSE>;
-            label = "MKP_EXIT_AML";
         };
     };
 
@@ -121,49 +99,26 @@
         };
 
         NUM {
-            bindings = <
-                &kp 1 &kp 2 &kp 3 &kp 4 &kp 5 &kp 6 &kp 7 &kp 8 &kp 9 &kp 0
-                &kp EXCLAMATION &kp AT_SIGN &kp HASH &kp DOLLAR &kp PERCENT &kp CARET &kp AMPERSAND &kp ASTERISK &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS
-                &trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans &trans &trans &trans
-            >;
+            bindings = <...>;
         };
 
         ARROW {
-            bindings = <
-                &kp UP_ARROW &kp DOWN_ARROW &kp LEFT_ARROW &kp RIGHT_ARROW &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans
-            >;
+            bindings = <...>;
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
         MOUSE {
-            bindings = <
-                &mkp_exit_AML LCLK     &mkp_exit_AML RCLK       &mkp_exit_AML MS_UP     &mkp_exit_AML MS_DOWN   &mkp_exit_AML MS_LEFT
-                &mkp_exit_AML MS_RIGHT &trans                  &trans                  &trans                  &trans
-                &trans                 &trans                  &trans                  &trans                  &trans
-                &trans                 &trans                  &trans
-            >;
+            bindings = <...>;
         };
 
         SCROLL {
-            bindings = <
-                &kp HOME &kp END &kp PAGE_UP &kp PAGE_DOWN &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans
-            >;
+            bindings = <...>;
         };
 
         layer_6 {
-            bindings = <
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans
-            >;
+            bindings = <...>;
         };
     };
 };
+
+&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 250>; };
