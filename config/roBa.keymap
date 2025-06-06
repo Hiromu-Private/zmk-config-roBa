@@ -121,32 +121,49 @@
         };
 
         NUM {
-            bindings = <...>;
+            bindings = <
+                &kp 1 &kp 2 &kp 3 &kp 4 &kp 5 &kp 6 &kp 7 &kp 8 &kp 9 &kp 0
+                &kp EXCLAMATION &kp AT_SIGN &kp HASH &kp DOLLAR &kp PERCENT &kp CARET &kp AMPERSAND &kp ASTERISK &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS
+                &trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans &trans &trans &trans &trans
+            >;
         };
 
         ARROW {
-            bindings = <...>;
+            bindings = <
+                &kp UP_ARROW &kp DOWN_ARROW &kp LEFT_ARROW &kp RIGHT_ARROW &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans
+            >;
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
         MOUSE {
             bindings = <
-                &mkp_exit_AML LCLK
-                &mkp_exit_AML RCLK
-                &mkp_exit_AML MS_UP
-                &mkp_exit_AML MS_DOWN
-                &mkp_exit_AML MS_LEFT
-                &mkp_exit_AML MS_RIGHT
-                &trans &trans &trans &trans &trans &trans
+                &mkp_exit_AML LCLK     &mkp_exit_AML RCLK       &mkp_exit_AML MS_UP     &mkp_exit_AML MS_DOWN   &mkp_exit_AML MS_LEFT
+                &mkp_exit_AML MS_RIGHT &trans                  &trans                  &trans                  &trans
+                &trans                 &trans                  &trans                  &trans                  &trans
+                &trans                 &trans                  &trans
             >;
         };
 
         SCROLL {
-            bindings = <...>;
+            bindings = <
+                &kp HOME &kp END &kp PAGE_UP &kp PAGE_DOWN &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans
+            >;
         };
 
         layer_6 {
-            bindings = <...>;
+            bindings = <
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans
+            >;
         };
     };
 };
