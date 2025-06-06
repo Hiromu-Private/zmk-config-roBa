@@ -52,7 +52,7 @@
         browser_back: browser_back {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_COMMAND &kp LEFT_ARROW>;
+            bindings = <&kp LG(LEFT_ARROW)>;
             label = "BROWSER_BACK";
         };
     };
@@ -122,10 +122,10 @@
 
         SCROLL {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans         &trans           &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &kp RIGHT_SHIFT  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &browser_back  &trans           &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                          &trans
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans              &trans               &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans              &kp RIGHT_SHIFT      &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LG(LEFT_ARROW)  &kp LG(RIGHT_ARROW)  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                   &trans
             >;
         };
 
