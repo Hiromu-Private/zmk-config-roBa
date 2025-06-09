@@ -4,6 +4,7 @@
 #include <dt-bindings/zmk/pointing.h>
 
 // OS設定を日本語キーボードのまま使用するための変換定義
+
 #define JP_DQUOTE       AT                // "
 #define JP_AMPERSAND    CARET             // &
 #define JP_QUOTE        AMPERSAND         // '
@@ -27,7 +28,6 @@
 #define JP_KANA         LANGUAGE_1        // かな
 #define JP_EISU         LANGUAGE_2        // 英数
 #define JP_HANZEN       GRAVE             // 半角/全角
-
 #define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100  // #includeのあとのあたりにスクロール量を変更
 
@@ -92,7 +92,7 @@
                 <&macro_release>,
                 <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
                 <&macro_tap>,
-                <&sl MOUSE>;
+                <&sl 0>;
 
             label = "MKP_EXIT_AML";
         };
@@ -140,8 +140,8 @@
 
         default_layer {
             bindings = <
-&kp Q                      &kp W         &kp E         &kp R                   &kp T                                    &kp Y                    &kp U  &lt 5 I   &kp O     &kp P
-&mt LEFT_CONTROL A         &kp S         &kp D         &kp F                   &kp G        &mkp MB3       &kp MINUS    &kp H                    &kp J  &kp K     &kp L     &lt 5 ENTER
+&kp Q                      &kp W         &kp E         &kp R                   &kp T                                    &kp Y                    &kp U  &lt 4 I   &kp O     &kp P
+&mt LEFT_CONTROL A         &kp S         &kp D         &kp F                   &kp G        &mkp MB3       &kp MINUS    &kp H                    &kp J  &kp K     &kp L     &lt 4 ENTER
 &mt_z_custom LEFT_SHIFT Z  &kp X         &kp C         &kp V                   &kp B        &kp COMMA      &kp PERIOD   &kp N                    &kp M  &mkp MB1  &mkp MB2  &kp BACKSPACE
 &kp LEFT_SHIFT             &kp LEFT_WIN  &kp LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt 2 SPACE  &lt 3 TAB      &lt 3 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
             >;
@@ -167,15 +167,6 @@
             >;
         };
 
-                Sym_Num {
-            bindings = <
-&kp EXCLAMATION    &kp JP_DQUOTE    &kp HASH         &kp DOLLAR      &kp PERCENT                         &kp JP_AMPERSAND  &kp JP_QUOTE       &kp JP_EQUAL     &kp JP_CARET      &kp JP_YEN
-&kp NUMBER_1       &kp NUMBER_2     &kp NUMBER_3     &kp NUMBER_4    &kp NUMBER_5    &trans      &trans  &kp JP_PLUS       &kp JP_TILDE       &kp JP_PIPE      &kp JP_AT         &kp JP_COLON
-&kp NUMBER_6       &kp NUMBER_7     &kp NUMBER_8     &kp NUMBER_9    &kp NUMBER_0    &trans      &trans  &none             &kp JP_ASTERISK    &kp JP_BACKQUOTE &kp JP_UNDERSCORE &kp SEMICOLON
-&trans             &trans           &trans           &trans          &trans          &trans      &trans  &trans                                                                  &trans
-            >;
-        };
-
         ARROW {
             bindings = <
 &kp ESCAPE      &kp KP_N7  &kp KP_N8  &kp KP_N9  &trans                             &trans         &kp HOME        &kp UP_ARROW    &kp END          &trans
@@ -190,9 +181,9 @@
         MOUSE {
             bindings = <
 &to_layer_0 Q           &to_layer_0 W             &to_layer_0 E         &to_layer_0 R           &to_layer_0 T                                               &to_layer_0 Y      &to_layer_0 U  &to_layer_0 I      &to_layer_0 O      &to_layer_0 P
-&to_layer_0 A           &to_layer_0 S             &to_layer_0 D         &to_layer_0 F           &to_layer_0 G  &to_layer_0 LG(C)      &to_layer_0 MINUS     &to_layer_0 H      &to_layer_0 J  &to_layer_0 K      &to_layer_0 L      &lt_to_layer_0 5 ENTER
-&to_layer_0 Z           &to_layer_0 X             &to_layer_0 C         &to_layer_0 V           &to_layer_0 B  &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N      &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &lt 5 BACKSPACE
-&to_layer_0 LEFT_SHIFT  &to_layer_0 LEFT_COMMAND  &to_layer_0 LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt 2 SPACE    &lt 3 TAB              &lt 3 SPACE           &to_layer_0 LANG1                                                       &to_layer_0 ESCAPE
+&to_layer_0 A           &to_layer_0 S             &to_layer_0 D         &to_layer_0 F           &to_layer_0 G  &to_layer_0 LG(C)      &to_layer_0 MINUS     &to_layer_0 H      &to_layer_0 J  &to_layer_0 K      &to_layer_0 L      &lt_to_layer_0 4 ENTER
+&to_layer_0 Z           &to_layer_0 X             &to_layer_0 C         &to_layer_0 V           &to_layer_0 B  &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N      &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &lt 4 BACKSPACE
+&to_layer_0 LEFT_SHIFT  &to_layer_0 LEFT_COMMAND  &to_layer_0 LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt 2 SPACE    &lt 7 TAB              &lt 7 SPACE           &to_layer_0 LANG1                                                       &to_layer_0 ESCAPE
             >;
         };
 
@@ -211,6 +202,15 @@
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans        &trans        &trans        &trans        &trans
 &trans  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans      &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans                                                  &bt BT_CLR_ALL
+            >;
+        };
+
+        Sym_Num {
+            bindings = <
+&kp EXCLAMATION  &kp JP_DQUOTE  &kp HASH      &kp DOLLAR    &kp PERCENT                       &kp JP_AMPERSAND  &kp JP_QUOTE     &kp JP_EQUAL      &kp JP_CARET       &kp JP_YEN
+&kp NUMBER_1     &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4  &kp NUMBER_5  &trans      &trans  &kp JP_PLUS       &kp JP_TILDE     &kp JP_PIPE       &kp JP_AT          &kp JP_COLON
+&kp NUMBER_6     &kp NUMBER_7   &kp NUMBER_8  &kp NUMBER_9  &kp NUMBER_0  &trans      &trans  &none             &kp JP_ASTERISK  &kp JP_BACKQUOTE  &kp JP_UNDERSCORE  &kp SEMICOLON
+&trans           &trans         &trans        &trans        &trans        &trans      &trans  &trans                                                                  &trans
             >;
         };
     };
