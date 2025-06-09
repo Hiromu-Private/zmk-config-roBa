@@ -13,7 +13,6 @@
 };
 
 &sl { release-after-ms = <250>; }; // ダブルクリックに必要な時間を設定
-
 / {
     combos {
         compatible = "zmk,combos";
@@ -80,6 +79,7 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
             bindings = <&mo>, <&to_layer_0>;
+
             #binding-cells = <2>;
             tapping-term-ms = <200>;
         };
@@ -104,10 +104,10 @@
 
         default_layer {
             bindings = <
-                &kp Q               &kp W         &kp E         &kp R                   &kp T                                                                     &kp Y                    &kp U  &lt 5 I    &kp O    &kp P
-                &mt LEFT_CONTROL A  &kp S         &kp D         &kp F                   &kp G                   &kp LS(LG(S))             &kp MINUS               &kp H                    &kp J  &kp K      &kp L    &lt_to_layer_0 5 ENTER
-                &mt LEFT_SHIFT Z    &kp X         &kp C         &kp V                   &kp B                   &kp COLON                 &kp QUESTION            &kp N                    &kp M  &kp COMMA  &kp DOT  &lt 5 BACKSPACE
-                &kp LCTRL           &kp LEFT_WIN  &kp LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt_to_layer_0 2 SPACE  &lt_to_layer_0 3 TAB      &lt_to_layer_0 3 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
+&kp Q               &kp W         &kp E         &kp R                   &kp T                                                                     &kp Y                    &kp U  &lt 5 I    &kp O    &kp P
+&mt LEFT_CONTROL A  &kp S         &kp D         &kp F                   &kp G                   &kp LS(LG(S))             &kp MINUS               &kp H                    &kp J  &kp K      &kp L    &lt_to_layer_0 5 ENTER
+&mt LEFT_SHIFT Z    &kp X         &kp C         &kp V                   &kp B                   &kp COLON                 &kp QUESTION            &kp N                    &kp M  &kp COMMA  &kp DOT  &lt 5 BACKSPACE
+&kp LCTRL           &kp LEFT_WIN  &kp LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt_to_layer_0 2 SPACE  &lt_to_layer_0 3 TAB      &lt_to_layer_0 3 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
             >;
 
             sensor-bindings = <&encoder_scroll>;
@@ -115,10 +115,10 @@
 
         FUNCTION {
             bindings = <
-                &trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
-                &trans  &trans  &trans  &trans  &trans  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
-                &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans  &trans  &trans  &trans  &kp F11
-                &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                          &kp F12
+&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
+&trans  &trans  &trans  &trans  &trans  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans  &trans  &trans  &trans  &kp F11
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                          &kp F12
             >;
         };
 
@@ -144,10 +144,10 @@
 
         MOUSE {
             bindings = <
-&to_layer_0 Q  &to_layer_0 W  &to_layer_0 E &to_layer_0 R &to_layer_0 T                     &to_layer_0 Y  &to_layer_0 U &to_layer_0             &to_layer_0             &to_layer_0
-&to_layer_0         &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0      &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0             &to_layer_0             &to_layer_0
-&to_layer_0         &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0      &to_layer_0  &to_layer_0  &to_layer_0  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &to_layer_0
-&to_layer_0         &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0  &to_layer_0      &to_layer_0  &to_layer_0                                                &trans
+&to_layer_0 Q           &to_layer_0 W             &to_layer_0 E         &to_layer_0 R      &to_layer_0 T                                                   &to_layer_0 Y      &to_layer_0 U  &to_layer_0 I      &to_layer_0 O      &to_layer_0 P
+&to_layer_0 A           &to_layer_0 S             &to_layer_0 D         &to_layer_0 F      &to_layer_0 G      &to_layer_0 LG(C)      &to_layer_0 MINUS     &to_layer_0 H      &to_layer_0 J  &to_layer_0 K      &to_layer_0 L      &to_layer_0 ENTER
+&to_layer_0 Z           &to_layer_0 X             &to_layer_0 C         &to_layer_0 V      &to_layer_0 B      &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N      &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &to_layer_0 BACKSPACE
+&to_layer_0 LEFT_SHIFT  &to_layer_0 LEFT_COMMAND  &to_layer_0 LEFT_ALT  &to_layer_0 LANG2  &to_layer_0 SPACE  &to_layer_0 TAB        &to_layer_0 SPACE     &to_layer_0 LANG1                                                       &to_layer_0 ESCAPE
             >;
         };
 
