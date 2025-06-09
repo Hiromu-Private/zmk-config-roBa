@@ -8,8 +8,6 @@
 &mt {
     flavor = "balanced";
     quick-tap-ms = <0>;
-    tapping-term-ms = <180>;
-    require-prior-idle-ms = <125>;
 };
 
 &sl { release-after-ms = <250>; }; // ダブルクリックに必要な時間を設定
