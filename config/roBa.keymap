@@ -8,7 +8,10 @@
 
 &mt {
     flavor = "balanced";
-    quick-tap-ms = <0>;
+    tapping-term-ms = <180>;        // hold判定時間を短縮
+    quick-tap-ms = <125>;           // クイックタップ有効化
+    require-prior-idle-ms = <125>;  // 前入力からの間隔要求
+
 };
 
 &sl { release-after-ms = <250>; };
