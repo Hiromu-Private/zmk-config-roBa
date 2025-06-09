@@ -6,7 +6,7 @@
 #define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
 
 &mt {
-    flavor = "hold-preferred";
+    flavor = "balanced";
     quick-tap-ms = <0>;
 };
 
@@ -77,9 +77,17 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
             bindings = <&mo>, <&to_layer_0>;
-
             #binding-cells = <2>;
             tapping-term-ms = <200>;
+        };
+        
+        mt_z_custom: mt_z_custom {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            quick-tap-ms = <0>;
+            tapping-term-ms = <0>;
+            label = "MT_Z_CUSTOM";
         };
     };
 
