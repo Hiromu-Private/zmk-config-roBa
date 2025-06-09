@@ -8,6 +8,8 @@
 &mt {
     flavor = "balanced";
     quick-tap-ms = <0>;
+    tapping-term-ms = <280>;        // ホールド判定時間を長めに
+    require-prior-idle-ms = <150>;  // 前のキー入力との間隔を要求
 };
 
 &sl { release-after-ms = <250>; }; // ダブルクリックに必要な時間を設定
