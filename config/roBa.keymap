@@ -96,7 +96,7 @@
             bindings = <&kp>, <&kp>;
 
             retro-tap;
-            hold-trigger-key-positions = <24 12 11 13 37>;
+            hold-trigger-key-positions = <37>;
         };
 
         // 新しいスクロール動作の追加
