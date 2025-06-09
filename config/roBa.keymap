@@ -4,7 +4,9 @@
 #include <dt-bindings/zmk/pointing.h>
 
 #define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
+
 // #includeのあとのあたりにスクロール量を変更
+
 #define ZMK_MOUSE_DEFAULT_SCRL_VAL 100
 
 &mt {
@@ -95,11 +97,14 @@
         };
 
         // 新しいスクロール動作の追加
+
         scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
+
             // 追加: スクロールのタップ時間を設定 (20ms)
+
             tap-ms = <20>;
         };
     };
@@ -115,7 +120,7 @@
 &kp LEFT_SHIFT             &kp LEFT_WIN  &kp LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt 2 SPACE  &lt 3 TAB          &lt 3 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
             >;
 
-            sensor-bindings = <&inc_dec_kp PG_UP PAGE_DOWN>;
+            sensor-bindings = <&scroll_up_down>;
         };
 
         FUNCTION {
