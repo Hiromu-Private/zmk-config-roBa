@@ -84,10 +84,12 @@
         
         mt_z_custom: mt_z_custom {
             compatible = "zmk,behavior-hold-tap";
+            label = "MT_Z_CUSTOM";
             #binding-cells = <2>;
             flavor = "hold-preferred";
             quick-tap-ms = <0>;
-            label = "MT_Z_CUSTOM";
+            tapping-term-ms = <100>;
+            bindings = <&kp>, <&kp>;
         };
     };
 
