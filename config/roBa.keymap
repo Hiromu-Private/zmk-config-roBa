@@ -6,7 +6,7 @@
 #define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
 
 &mt {
-    flavor = "balanced";
+    flavor = "hold-tap-preferred";
     quick-tap-ms = <0>;
     tapping-term-ms = <150>;  // ホールド判定時間を短くする（短く押してもホールド）
 };
