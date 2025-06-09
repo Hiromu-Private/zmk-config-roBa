@@ -9,6 +9,7 @@
     flavor = "hold-preferred";
     quick-tap-ms = <0>;
 };
+
 &sl { release-after-ms = <250>; }; // ダブルクリックに必要な時間を設定
 / {
     combos {
@@ -136,7 +137,7 @@
 
         SCROLL {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                      &trans  &trans              &kp LC(UP_ARROW)     &kp LC(LG(LA(L)))    &trans
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans              &kp LC(UP_ARROW)     &kp LA(LC(LG(L)))    &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &kp LC(LEFT_ARROW)  &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans              &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                                &trans
