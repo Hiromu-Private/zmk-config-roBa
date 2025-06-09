@@ -97,6 +97,7 @@
 
             retro-tap;
             hold-trigger-key-positions = <37>;
+            hold-while-undecided;
         };
 
         // 新しいスクロール動作の追加
