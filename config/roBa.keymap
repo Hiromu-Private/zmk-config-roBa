@@ -118,7 +118,7 @@
             bindings = <&kp>, <&kp>;
 
             retro-tap;
-            hold-trigger-key-positions = <37>;
+            hold-trigger-key-positions = <37 24 12 13 11 25>;
             hold-while-undecided;
         };
 
