@@ -90,10 +90,13 @@
             compatible = "zmk,behavior-hold-tap";
             label = "MT_Z_CUSTOM";
             #binding-cells = <2>;
-            flavor = "hold-preferred";
+            flavor = "balanced";
             quick-tap-ms = <0>;
             tapping-term-ms = <100>;
             bindings = <&kp>, <&kp>;
+
+            retro-tap;
+            hold-trigger-key-positions = <24 2 12 11>;
         };
 
         // 新しいスクロール動作の追加
