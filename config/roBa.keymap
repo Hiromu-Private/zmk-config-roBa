@@ -172,7 +172,7 @@
         ARROW {
             bindings = <
 &kp ESCAPE      &kp KP_N7  &kp KP_N8  &kp KP_N9  &trans                               &trans         &kp HOME        &kp UP_ARROW    &kp END          &trans
-&kp HOME        &kp KP_N4  &kp KP_N5  &kp KP_N6  &kp JP_COLON      &mkp MB3      &trans  &kp BACKSPACE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans
+&kp HOME        &kp KP_N4  &kp KP_N5  &kp KP_N6  &kp JP_COLON   &mkp MB3      &trans  &kp BACKSPACE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans
 &kp LEFT_SHIFT  &kp KP_N1  &kp KP_N2  &kp KP_N3  &kp SEMICOLON  &trans        &trans  &trans         &trans          &trans          &trans           &trans
 &trans          &kp KP_N0  &trans     &trans     &trans         &trans        &trans  &trans                                                          &trans
             >;
@@ -193,10 +193,10 @@
 
         SCROLL {
             bindings = <
-&trans  &trans  &trans  &trans  &kp LA(LS(T))                                &kp LA(LS(Y))  &trans              &kp LC(UP_ARROW)     &kp LA(LC(LG(L)))    &trans
-&trans  &trans  &trans  &trans  &trans         &kp LG(NUMBER_0)      &trans  &trans         &kp LC(LEFT_ARROW)  &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
-&trans  &trans  &trans  &trans  &trans         &trans                &trans  &trans         &trans              &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
-&trans  &trans  &trans  &trans  &trans         &trans                &trans  &trans                                                                       &trans
+&trans             &trans             &trans  &trans  &kp LA(LS(T))                                &kp LA(LS(Y))  &trans              &kp LC(UP_ARROW)     &kp LA(LC(LG(L)))    &trans
+&trans             &trans             &trans  &trans  &trans         &kp LG(NUMBER_0)      &trans  &trans         &kp LC(LEFT_ARROW)  &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
+&trans             &trans             &trans  &trans  &trans         &trans                &trans  &trans         &trans              &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
+&kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))  &trans  &trans  &trans         &trans                &trans  &trans                                                                       &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_AC_ZOOM_IN C_AC_ZOOM_OUT>;
