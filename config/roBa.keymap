@@ -184,7 +184,7 @@
             bindings = <
 &to_layer_0 Q              &to_layer_0 W             &to_layer_0 E         &to_layer_0 R           &to_layer_0 T                                               &to_layer_0 Y      &to_layer_0 U  &to_layer_0 I      &to_layer_0 O      &to_layer_0 P
 &mt LEFT_CONTROL A         &to_layer_0 S             &to_layer_0 D         &to_layer_0 F           &to_layer_0 G  &mkp MB3               &to_layer_0 MINUS     &to_layer_0 H      &to_layer_0 J  &to_layer_0 K      &to_layer_0 L      &lt_to_layer_0 5 ENTER
-&mt_z_custom LEFT_SHIFT Z  &to_layer_0 X             &to_layer_0 C         &to_layer_0 V           &to_layer_0 B  &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N      &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &lt 5 BACKSPACE
+&mt_z_custom LEFT_SHIFT Z  &to_layer_0 X             &kp LG(C)             &kp LG(V)               &to_layer_0 B  &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N      &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &lt 5 BACKSPACE
 &to_layer_0 LEFT_SHIFT     &to_layer_0 LEFT_COMMAND  &to_layer_0 LEFT_ALT  &mt LEFT_COMMAND LANG2  &lt 2 SPACE    &lt 3 TAB              &lt 3 SPACE           &to_layer_0 LANG1                                                       &to_layer_0 ESCAPE
             >;
 
