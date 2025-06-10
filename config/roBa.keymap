@@ -67,7 +67,7 @@
         };
 
         copy-chatGPT {
-            bindings = <&kp A>;
+            bindings = <&select_copy LG(A) LG(C)>;
             key-positions = <10 11 12 13>;
         };
     };
@@ -109,25 +109,22 @@
             label = "ZOOM_IN";
         };
 
-select_copy: SELECT_AND_COPY {
-    compatible = "zmk,behavior-macro-two-param";
-    #binding-cells = <2>;
+        select_copy: SELECT_AND_COPY {
+            compatible = "zmk,behavior-macro-two-param";
+            #binding-cells = <2>;
+            bindings =
+                <&macro_press>,
+                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_wait_time 50>,
+                <&macro_release>,
+                <&macro_wait_time 100>,
+                <&macro_press>,
+                <&macro_param_2to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_wait_time 50>,
+                <&macro_release>;
 
-    bindings =
-        <&macro_press>,
-        <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-        <&macro_wait_time 50>,
-        <&macro_release>,
-
-        <&macro_wait_time 100>,
-
-        <&macro_press>,
-        <&macro_param_2to1 &kp MACRO_PLACEHOLDER>,
-        <&macro_wait_time 50>,
-        <&macro_release>;
-
-    label = "SELECT_AND_COPY";
-};
+            label = "SELECT_AND_COPY";
+        };
     };
 
     behaviors {
