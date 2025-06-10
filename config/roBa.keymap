@@ -160,10 +160,10 @@
 
         NUM {
             bindings = <
-&kp EXCLAMATION             &kp DOUBLE_QUOTES  &kp HASH         &kp DOLLAR       &kp PERCENT                                                &kp AMPERSAND  &kp SQT    &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp MINUS
-&kp SLASH                   &kp KP_NUMBER_4    &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &kp UNDERSCORE  &kp SEMICOLON  &kp COLON  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &kp LCTRL
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1    &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans          &kp AT         &kp UNDER  &kp COMMA             &kp PERIOD             &kp SLASH
-&trans                      &trans             &trans           &trans           &trans        &trans                       &trans          &trans                                                                 &kp PIPE
+&kp EXCLAMATION             &kp JP_DQUOTE      &kp HASH         &kp DOLLAR       &kp PERCENT                                                   &kp JP_AMPERSAND  &kp JP_QUOTE       &kp JP_LPAREN        &kp JP_RPAREN        &kp MINUS
+&kp SLASH                   &kp KP_NUMBER_4    &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &kp JP_UNDERSCORE  &kp SEMICOLON     &kp JP_COLON       &kp JP_LBRACKET      &kp JP_RBRACKET      &kp JP_CARET
+&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1    &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans             &kp JP_AT         &kp JP_UNDERSCORE  &kp COMMA            &kp PERIOD           &kp SLASH
+&trans                      &trans             &trans           &trans           &trans        &trans                       &trans             &trans                                                                         &kp JP_PIPE
             >;
         };
 
