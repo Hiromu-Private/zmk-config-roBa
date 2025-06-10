@@ -120,12 +120,10 @@
             bindings =
                 <&macro_press>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_wait_time 50>,
                 <&macro_release>,
                 <&macro_wait_time 100>,
                 <&macro_press>,
                 <&macro_param_2to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_wait_time 50>,
                 <&macro_release>;
 
             label = "SELECT_AND_COPY";
