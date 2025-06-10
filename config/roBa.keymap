@@ -96,6 +96,13 @@
 
             label = "MKP_EXIT_AML";
         };
+
+        zoom_in: zoom_in {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LG(PLUS)>;
+            label = "ZOOM_IN";
+        };
     };
 
     behaviors {
