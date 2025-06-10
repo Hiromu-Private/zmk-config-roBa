@@ -65,6 +65,11 @@
             bindings = <&kp EQUAL>;
             key-positions = <24 25>;
         };
+
+        copy-chatGPT {
+            bindings = <&kp A>;
+            key-positions = <10 11 12 13>;
+        };
     };
 
     macros {
@@ -102,6 +107,14 @@
             #binding-cells = <0>;
             bindings = <&kp LG(PLUS)>;
             label = "ZOOM_IN";
+        };
+
+        SELECT_AND_COPY: SELECT_AND_COPY {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LG(A)>, <&macro_press>, <&kp LG(C)>;
+
+            label = "SELECT_AND_COPY";
         };
     };
 
