@@ -109,10 +109,20 @@
             label = "ZOOM_IN";
         };
 
-        SELECT_AND_COPY: SELECT_AND_COPY {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LG(A)>, <&macro_press>, <&kp LG(C)>;
+        select_copy: SELECT_AND_COPY {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings =
+                <&macro_press>,
+                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_wait_time 50>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&macro_press>,
+                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_wait_time 50>,
+                <&macro_pause_for_release>,
+                <&macro_release>;
 
             label = "SELECT_AND_COPY";
         };
