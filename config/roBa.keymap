@@ -159,7 +159,7 @@
             compatible = "zmk,behavior-hold-tap";
             label = "MT_COMAND_CUSTOM";
             #binding-cells = <2>;
-            flavor = "hold-preferred";
+            flavor = "balanced";
             tapping-term-ms = <150>;
             bindings = <&kp>, <&kp>;
 
