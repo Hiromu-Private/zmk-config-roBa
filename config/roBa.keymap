@@ -59,7 +59,7 @@
         };
 
         alfred {
-            bindings = <&kp LS(SPACE)>;
+            bindings = <&kp LC(SPACE)>;
             key-positions = <10 38>;
         };
     };
