@@ -57,6 +57,11 @@
             bindings = <&kp QUESTION>;
             key-positions = <21 20>;
         };
+
+        alfred {
+            bindings = <&kp LS(SPACE)>;
+            key-positions = <10 38>;
+        };
     };
 
     macros {
