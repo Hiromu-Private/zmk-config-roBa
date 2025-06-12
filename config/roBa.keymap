@@ -237,7 +237,7 @@
 &kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))     &trans                &trans  &trans         &trans                &trans  &trans                                                                       &trans
             >;
 
-            sensor-bindings = <&inc_dec_kp LG(PLUS) LG(MINUS)>;
+            sensor-bindings = <&inc_dec_kp LG(PLUS) LG(JP_PLUS)>;
         };
 
         layer_6 {
