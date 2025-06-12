@@ -163,6 +163,15 @@
             hold-while-undecided;
             hold-while-undecided-linger;
         };
+
+        new_behavior: new_behavior {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+
+            tap-ms = <20>;
+            label = "NEW_BEHAVIOR";
+        };
     };
 
     keymap {
@@ -229,7 +238,7 @@
 &kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))     &trans                &trans  &trans         &trans                &trans  &trans                                                                       &trans
             >;
 
-            sensor-bindings = <&inc_dec_kp C_AC_ZOOM_IN C_AC_ZOOM_OUT>;
+            sensor-bindings = <&inc_dec_kp LG(PLUS) LG(MINUS)>;
         };
 
         layer_6 {
