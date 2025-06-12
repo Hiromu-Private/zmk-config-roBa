@@ -161,6 +161,7 @@
             retro-tap;
             hold-while-undecided;
             hold-while-undecided-linger;
+            quick-tap-ms = <0>;
         };
 
         new_behavior: new_behavior {
