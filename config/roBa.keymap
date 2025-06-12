@@ -158,9 +158,7 @@
             tapping-term-ms = <150>;
             bindings = <&kp>, <&kp>;
 
-            retro-tap;
             hold-while-undecided;
-            hold-while-undecided-linger;
             quick-tap-ms = <0>;
         };
 
