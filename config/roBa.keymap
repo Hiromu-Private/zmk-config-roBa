@@ -39,7 +39,7 @@
 &sl { release-after-ms = <250>; };
 
 &lt {
-    tapping-term-ms = <120>;
+    tapping-term-ms = <150>;
     flavor = "balanced";
     hold-while-undecided;
     hold-while-undecided-linger;
