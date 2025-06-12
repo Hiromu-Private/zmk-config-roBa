@@ -155,7 +155,7 @@
             label = "MT_COMAND_CUSTOM";
             #binding-cells = <2>;
             flavor = "hold-preferred";
-            tapping-term-ms = <150>;
+            tapping-term-ms = <120>;
             bindings = <&kp>, <&kp>;
 
             hold-while-undecided;
