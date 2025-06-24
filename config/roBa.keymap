@@ -82,6 +82,11 @@
             bindings = <&kp LS(LG(S))>;
             key-positions = <22 37 11>;
         };
+
+        shift+command+C {
+            bindings = <&kp LS(LG(C))>;
+            key-positions = <22 37 24>;
+        };
     };
 
     macros {
