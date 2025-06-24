@@ -62,6 +62,26 @@
             bindings = <&kp LC(SPACE)>;
             key-positions = <10 38>;
         };
+
+        shift+command+V {
+            bindings = <&kp LS(LG(V))>;
+            key-positions = <22 37 25>;
+        };
+
+        shift+command+C {
+            bindings = <&kp LS(LG(C))>;
+            key-positions = <22 37 24>;
+        };
+
+        shift+command+E {
+            bindings = <&kp LS(LG(E))>;
+            key-positions = <22 37 2>;
+        };
+
+        shift+command+S {
+            bindings = <&kp LS(LG(S))>;
+            key-positions = <22 37 11>;
+        };
     };
 
     macros {
