@@ -261,10 +261,10 @@
 
         SCROLL {
             bindings = <
-&trans             &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &trans  &kp LA(LS(T))                                &kp LA(LS(Y))  &trans                  &kp LC(UP_ARROW)     &kp LA(LG(LS(L)))    &trans
-&trans             &trans                &kp LC(LEFT_ARROW)    &trans  &trans         &kp LG(NUMBER_0)      &trans  &trans         &kp LG(LA(UP_ARROW))    &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
-&trans             &trans                &trans                &trans  &trans         &trans                &trans  &trans         &kp LA(LG(DOWN_ARROW))  &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
-&kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))     &trans                &trans  &trans         &trans                &trans  &trans                                                                           &trans
+&trans             &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &trans  &kp LA(LS(T))                                                        &kp LA(LS(Y))  &trans                  &kp LC(UP_ARROW)     &kp LA(LG(LS(L)))    &trans
+&trans             &trans                &kp LC(LEFT_ARROW)    &trans  &trans                      &kp LG(NUMBER_0)                 &trans  &trans         &kp LG(LA(UP_ARROW))    &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
+&trans             &trans                &trans                &trans  &kp LC(LG(LA(LEFT_ARROW)))  &kp LA(LC(LG(RIGHT_ARROW)))      &trans  &trans         &kp LA(LG(DOWN_ARROW))  &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
+&kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))     &trans                &trans  &trans                      &trans                           &trans  &trans                                                                           &trans
             >;
 
             sensor-bindings = <&inc_dec_kp LG(MINUS) LG(JP_PLUS)>;
@@ -285,6 +285,15 @@
 &kp NUMBER_1     &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4  &kp NUMBER_5  &trans      &trans  &kp JP_PLUS       &kp JP_TILDE     &kp JP_PIPE       &kp JP_AT          &kp JP_COLON
 &kp NUMBER_6     &kp NUMBER_7   &kp NUMBER_8  &kp NUMBER_9  &kp NUMBER_0  &trans      &trans  &none             &kp JP_ASTERISK  &kp JP_BACKQUOTE  &kp JP_UNDERSCORE  &kp SEMICOLON
 &trans           &trans         &trans        &trans        &trans        &trans      &trans  &trans                                                                  &trans
+            >;
+        };
+
+        layer_8 {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                          &trans
             >;
         };
     };
