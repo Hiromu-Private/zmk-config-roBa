@@ -189,7 +189,7 @@
             bindings = <&kp>, <&kp>;
 
             quick-tap-ms = <0>;
-            hold-trigger-key-positions = <22>;
+            hold-trigger-key-positions = <22 10>;
         };
 
         new_behavior: new_behavior {
