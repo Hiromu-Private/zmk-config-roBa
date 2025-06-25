@@ -188,7 +188,6 @@
             tapping-term-ms = <150>;
             bindings = <&kp>, <&kp>;
 
-            hold-while-undecided;
             quick-tap-ms = <0>;
             hold-trigger-key-positions = <22>;
         };
