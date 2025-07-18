@@ -238,10 +238,10 @@
 
         ARROW {
             bindings = <
-&kp ESCAPE  &kp N7  &kp N8      &kp N9     &kp JP_YEN                            &trans         &kp HOME        &kp UP_ARROW    &kp END          &trans
-&kp SLASH   &kp N4  &kp N5      &kp N6     &kp JP_COLON   &mkp MB3       &trans  &kp BACKSPACE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &mo 7
-&kp SLASH   &kp N1  &kp N2      &kp N3     &kp SEMICOLON  &trans         &trans  &trans         &trans          &trans          &trans           &trans
-&trans      &kp N0  &kp PERIOD  &kp COMMA  &trans         &kp MINUS      &trans  &trans                                                          &trans
+&kp ESCAPE  &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp JP_YEN                            &trans         &kp HOME        &kp UP_ARROW    &kp END          &trans
+&kp SLASH   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp JP_COLON   &mkp MB3       &trans  &kp BACKSPACE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &mo 7
+&kp SLASH   &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp SEMICOLON  &trans         &trans  &trans         &trans          &trans          &trans           &trans
+&trans      &kp KP_NUMBER_0  &kp PERIOD       &kp COMMA        &trans         &kp MINUS      &trans  &trans                                                          &trans
             >;
 
             sensor-bindings = <&scroll_up_down>;
@@ -280,10 +280,10 @@
 
         Sym_Num {
             bindings = <
-&kp EXCLAMATION  &kp JP_DQUOTE  &kp HASH      &kp DOLLAR    &kp PERCENT                       &kp JP_AMPERSAND  &kp JP_QUOTE     &kp JP_EQUAL      &kp JP_CARET       &kp JP_YEN
-&kp NUMBER_1     &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4  &kp NUMBER_5  &trans      &trans  &kp JP_PLUS       &kp JP_TILDE     &kp JP_PIPE       &kp JP_AT          &kp JP_COLON
-&kp NUMBER_6     &kp NUMBER_7   &kp NUMBER_8  &kp NUMBER_9  &kp NUMBER_0  &trans      &trans  &none             &kp JP_ASTERISK  &kp JP_BACKQUOTE  &kp JP_UNDERSCORE  &kp SEMICOLON
-&trans           &trans         &trans        &trans        &trans        &trans      &trans  &trans                                                                  &trans
+&trans  &kp N7  &kp N8  &kp N9  &trans                      &kp JP_AMPERSAND  &kp JP_QUOTE     &kp JP_EQUAL      &kp JP_CARET       &kp JP_YEN
+&trans  &kp N4  &kp N5  &kp N6  &trans  &trans      &trans  &kp JP_PLUS       &kp JP_TILDE     &kp JP_PIPE       &kp JP_AT          &kp JP_COLON
+&trans  &kp N1  &kp N2  &kp N3  &trans  &trans      &trans  &none             &kp JP_ASTERISK  &kp JP_BACKQUOTE  &kp JP_UNDERSCORE  &kp SEMICOLON
+&trans  &kp N0  &trans  &trans  &trans  &trans      &trans  &trans                                                                  &trans
             >;
         };
 
