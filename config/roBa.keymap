@@ -143,20 +143,10 @@
             label = "SELECT_AND_COPY";
         };
 
-        pass_macro: pass_macro {
+        Apple_macro: pass_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <
-                 &kp LS(A)
-                 &kp P
-                 &kp P
-                 &kp L
-                 &kp E
-                 &kp N0
-                 &kp N7
-                 &kp N0
-                 &kp N1
-            >;
+            bindings = <&kp LS(A) &kp P &kp P &kp L &kp E &kp N0 &kp N7 &kp N0 &kp N1>;
             label = "PASS_MACRO";
         };
     };
