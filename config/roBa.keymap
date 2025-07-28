@@ -87,6 +87,11 @@
             bindings = <&kp LS(LG(D))>;
             key-positions = <22 37 12>;
         };
+
+        apple {
+            bindings = <&Apple_macro>;
+            key-positions = <7 8 18 41>;
+        };
     };
 
     macros {
