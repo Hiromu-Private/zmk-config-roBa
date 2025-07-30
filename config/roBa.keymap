@@ -90,7 +90,7 @@
 
         apple {
             bindings = <&Apple_macro>;
-            key-positions = <7 8 18 41>;
+            key-positions = <18 41 19 20 21>;
         };
     };
 
