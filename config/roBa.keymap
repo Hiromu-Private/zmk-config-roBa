@@ -302,7 +302,7 @@
         layer_8 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans          &trans            &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp JP_LBRACKET  &kp JP_RBRACKET   &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans     &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)   &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LESS_THAN   &kp GREATER_THAN  &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                            &trans
             >;
