@@ -272,8 +272,8 @@
 
         SCROLL {
             bindings = <
-&trans             &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &trans  &kp LA(LS(T))                                                        &kp LA(LS(Y))  &trans                  &kp LC(UP_ARROW)     &kp LA(LG(LS(L)))    &trans
-&trans             &trans                &kp LC(LEFT_ARROW)    &trans  &trans                      &kp LG(NUMBER_0)                 &trans  &trans         &kp LG(LA(UP_ARROW))    &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
+&kp C_VOLUME_UP    &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &trans  &kp LA(LS(T))                                                        &kp LA(LS(Y))  &trans                  &kp LC(UP_ARROW)     &kp LA(LG(LS(L)))    &trans
+&kp C_VOLUME_DOWN  &trans                &kp LC(LEFT_ARROW)    &trans  &trans                      &kp LG(NUMBER_0)                 &trans  &trans         &kp LG(LA(UP_ARROW))    &kp LC(RIGHT_ARROW)  &kp RIGHT_SHIFT      &trans
 &trans             &trans                &trans                &trans  &kp LC(LG(LA(LEFT_ARROW)))  &kp LA(LC(LG(RIGHT_ARROW)))      &trans  &trans         &kp LA(LG(DOWN_ARROW))  &kp LG(LEFT_ARROW)   &kp LG(RIGHT_ARROW)  &trans
 &kp LA(LS(LG(M)))  &kp LA(LS(LG(V)))     &trans                &trans  &trans                      &trans                           &trans  &trans                                                                           &trans
             >;
@@ -301,10 +301,10 @@
 
         layer_8 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans          &trans            &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans     &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)   &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LESS_THAN   &kp GREATER_THAN  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                            &trans
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans               &trans               &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LESS_THAN        &kp GREATER_THAN     &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                    &trans
             >;
         };
     };
