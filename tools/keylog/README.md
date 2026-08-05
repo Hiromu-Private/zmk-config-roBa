@@ -41,7 +41,7 @@ macOS 上では左右どちらの Shift も同じ働きをするので、使用�
 ## 使い方
 
 ```bash
-./roba-log build     # ビルドして ~/.local/bin/roba-keylog へインストール
+./roba-log build     # ビルドして ~/Applications/RobaKeylog.app へインストール
 ./roba-log start     # 計測開始（LaunchAgent 登録・再ログイン後も継続）
 ./roba-log permit    # 「入力監視」の許可設定を開く
 ./roba-log status    # 稼働状況とログ量
@@ -74,8 +74,20 @@ TCC はこれを同一のプログラムとして扱えない。
 `codesign --force --sign - --identifier com.waggy.roba-keylog` で正式に署名している。
 `LSUIElement` を立てているので Dock にもメニューバーにも出ない。
 
-**注意: `roba-log build` で作り直すと cdhash が変わり、入力監視の許可がリセットされる。**
-再ビルドしたら `./roba-log permit` でもう一度 ON にすること。
+### 署名は自己署名証明書で行う（ad-hoc ではない）
+
+当初 ad-hoc 署名（`codesign --sign -`）にしていたが、その場合 designated requirement が
+cdhash になるため、**再ビルドのたびに別プログラム扱いになり許可が毎回リセットされた**。
+
+そこで `roba-log build` が初回に自己署名の証明書（CN=`Waggy RobaKeylog Signing`）を
+作ってキーチェーンに入れ、それで署名するようにした。DR がこうなる:
+
+```
+designated => identifier "com.waggy.roba-keylog" and certificate leaf = H"a732..."
+```
+
+コードを変えても DR は変わらないので**許可は維持される**（3回ビルドして不変を確認済み）。
+証明書は login キーチェーンにあり、admin 権限も信頼設定も不要。
 
 ### ファームウェアの書き込み
 

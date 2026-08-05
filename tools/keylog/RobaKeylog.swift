@@ -188,19 +188,30 @@ let writer = LogWriter()
 
 // MARK: - イベントタップ
 
+/// 内蔵キーボードか外部（roBa）かを見分ける。
+///
+/// CGEvent には HID の vendor/product が乗らないので、キーボード種別 (keyboardType) で
+/// 判別する。Apple の内蔵キーボードは固有の値を返し、BLE の roBa とは異なる。
+/// 起動後に最初に観測した値を内蔵とみなすのではなく、実測値をそのまま記録して
+/// 解析側で分離できるようにする（解析時に roBa 側の値を選べばよい）。
+func keyboardKind(_ event: CGEvent) -> Int64 {
+    event.getIntegerValueField(.keyboardEventKeyboardType)
+}
+
 func handle(event: CGEvent, type: CGEventType) {
     checkUnits(event.timestamp)
     let t = eventToMs(event.timestamp)
     let code = event.getIntegerValueField(.keyboardEventKeycode)
+    let kb = keyboardKind(event)
 
     switch type {
     case .keyDown:
         // オートリピートはノイズになるので捨てる
         if event.getIntegerValueField(.keyboardEventAutorepeat) != 0 { return }
-        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"d\",\"k\":\"\(label(for: code))\"}")
+        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"d\",\"k\":\"\(label(for: code))\",\"kb\":\(kb)}")
 
     case .keyUp:
-        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"u\",\"k\":\"\(label(for: code))\"}")
+        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"u\",\"k\":\"\(label(for: code))\",\"kb\":\(kb)}")
 
     case .flagsChanged:
         guard let name = modifierKeys[code], let mask = modifierMasks[code] else { return }
@@ -210,9 +221,9 @@ func handle(event: CGEvent, type: CGEventType) {
             let ims = currentInputSourceID()
             let app = frontmostApp()
             writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"md\",\"k\":\"\(name)\"," +
-                          "\"ims\":\"\(ims)\",\"app\":\"\(app)\"}")
+                          "\"kb\":\(kb),\"ims\":\"\(ims)\",\"app\":\"\(app)\"}")
         } else {
-            writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"\(isDown ? "md" : "mu")\",\"k\":\"\(name)\"}")
+            writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"\(isDown ? "md" : "mu")\",\"k\":\"\(name)\",\"kb\":\(kb)}")
         }
 
     default:

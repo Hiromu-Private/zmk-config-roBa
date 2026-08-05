@@ -24,8 +24,46 @@ LABEL="com.waggy.roba-keylog"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 DOMAIN="gui/$(id -u)"
 
+SIGN_CN="Waggy RobaKeylog Signing"
+
+# 自己署名の証明書を用意する。
+#
+# ad-hoc 署名（codesign --sign -）だと designated requirement が cdhash になるため、
+# 再ビルドのたびに別プログラム扱いになり「入力監視」の許可が毎回リセットされる。
+# 証明書で署名すると DR が
+#   identifier "com.waggy.roba-keylog" and certificate leaf = H"..."
+# となり、コードを変えても許可が維持される。
+ensure_signing_identity() {
+  if security find-certificate -c "$SIGN_CN" >/dev/null 2>&1; then return 0; fi
+  echo "==> 署名用の自己署名証明書を作成します（初回のみ）"
+  local d
+  d="$(mktemp -d)"
+  cat > "$d/openssl.cnf" <<'EOF'
+[req]
+distinguished_name=dn
+x509_extensions=v3
+prompt=no
+[dn]
+CN=Waggy RobaKeylog Signing
+[v3]
+basicConstraints=critical,CA:false
+keyUsage=critical,digitalSignature
+extendedKeyUsage=critical,codeSigning
+EOF
+  openssl req -x509 -newkey rsa:2048 -keyout "$d/key.pem" -out "$d/cert.pem" \
+    -days 3650 -nodes -config "$d/openssl.cnf" >/dev/null 2>&1
+  # -legacy が無いと macOS の security が MAC 検証に失敗する
+  openssl pkcs12 -export -inkey "$d/key.pem" -in "$d/cert.pem" -out "$d/id.p12" \
+    -passout pass:tmp -name "$SIGN_CN" -legacy >/dev/null 2>&1
+  security import "$d/id.p12" -k "$HOME/Library/Keychains/login.keychain-db" \
+    -P tmp -T /usr/bin/codesign -A >/dev/null 2>&1
+  rm -rf "$d"
+  echo "==> 証明書を作成しました（以後の再ビルドで許可は維持されます）"
+}
+
 cmd_build() {
   echo "==> ビルド中..."
+  ensure_signing_identity
   local tmp was_running=0
   tmp="$(mktemp -d)"
   cp "$SRC_DIR/RobaKeylog.swift" "$tmp/main.swift"
@@ -50,9 +88,9 @@ cmd_build() {
 </dict>
 </plist>
 EOF
-  codesign --force --sign - --identifier "$BUNDLE_ID" "$stage"
+  codesign --force --sign "$SIGN_CN" --identifier "$BUNDLE_ID" "$stage" 2>&1 | sed 's/^/    /'
   echo "==> 署名:"
-  codesign -dv "$stage" 2>&1 | grep -E "Identifier|Signature" | sed 's/^/    /'
+  codesign -d -r- "$stage" 2>&1 | grep designated | sed 's/^/    /'
 
   if launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then
     launchctl bootout "$DOMAIN/$LABEL" >/dev/null 2>&1 || true

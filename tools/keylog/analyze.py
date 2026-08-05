@@ -207,12 +207,25 @@ def main():
 
     misfires, deliberate, combos = classify(lshift)
 
+    # position 34 を RIGHT_SHIFT にする細工が効いているか。
+    # 効いていなくても「単独Shift」「大文字＋打ち直し」は誤爆と断定できるので解析は成立する。
+    has_split = len(rshift) > 0
+
     print("=" * 62)
     print(" roBa mt_z_custom チューニング レポート")
     print("=" * 62)
     print(f"期間          : {days[0]} 〜 {days[-1]}  ({len(days)}日 / {len(sessions)}セッション)")
     print(f"総打鍵        : {total_down:,} 回")
     print(f"z キー確定打鍵: {z_count:,} 回   （tap 判定されて z が出た分）")
+    print(f"左右Shift分離 : {'有効' if has_split else '無効'}"
+          f"{'' if has_split else '   ← position 34 が LEFT_SHIFT のまま'}")
+    if not has_split:
+        print()
+        print("  RSFT が1件も観測されていません。誤爆の判定は以下だけで行います:")
+        print("    ・単独Shift（他キーを伴わない）      → 誤爆と断定できる")
+        print("    ・大文字が出た直後に BS/z で打ち直し → 誤爆と断定できる")
+        print("  『大文字入力』は position 34 の意図的な Shift と区別できないため判定保留になります。")
+        print("  分離を有効にすると保留分も判定できます（tools/keylog/STUDIO-SETUP.md）。")
     print()
 
     # ---- 誤爆の集計 ----
@@ -235,12 +248,17 @@ def main():
 
     # ---- 押下時間 ----
     mis_dur = [m["dur"] for m in misfires]
-    del_dur = [s["dur"] for s in rshift]
+    # 意図的な Shift の基準値。分離が有効なら RSFT、無効なら「大文字入力」で代用する
+    # （代用時は Z キー由来の誤爆が混ざるので下振れする点に注意）。
+    del_label = "意図的Shift" if has_split else "大文字入力"
+    del_dur = [s["dur"] for s in (rshift if has_split else deliberate)]
     print("── 押下時間の分布 " + "─" * 43)
     print(f"{'':14}{'p50':>8}{'p75':>8}{'p90':>8}{'p95':>8}{'p99':>8}{'max':>8}")
-    for lbl, vals in (("誤爆時のZ", mis_dur), ("意図的Shift", del_dur)):
+    for lbl, vals in (("誤爆時のZ", mis_dur), (del_label, del_dur)):
         cells = "".join(f"{fmt(pct(vals, p)):>8}" for p in (50, 75, 90, 95, 99, 100))
         print(f"{lbl:14}{cells}   n={len(vals)}")
+    if not has_split:
+        print("  ※ 『大文字入力』には Z キー由来の誤爆が混ざるため、実際の意図的 Shift より短めに出ます")
     print()
 
     # ---- 直前キーからの間隔 ----
@@ -319,7 +337,7 @@ def main():
     if rec_tt:
         print(f"tapping-term-ms       = <{rec_tt}>   誤爆の {len(kills_tt(rec_tt))}/{n_mis} を吸収")
         del_p10 = pct(del_dur, 10)
-        if del_p10 is not None and rec_tt >= del_p10:
+        if has_split and del_p10 is not None and rec_tt >= del_p10:
             print(f"  ⚠ 意図的Shiftの押下 p10 = {fmt(del_p10)} と重なります。ここまで上げると")
             print("    意図的な Shift が出しにくくなるので、他の手段で吸収するほうが安全です。")
     else:
@@ -327,6 +345,9 @@ def main():
     if not cross_kills:
         print("クロスハンド化        : 効果なし（誤爆を起こしているのは全て右手キー）")
     print(f"想定除去率            = {len(combined)}/{n_mis} ({len(combined) / n_mis * 100:.0f}%)")
+    if not has_split and deliberate:
+        print(f"  ※ 判定保留の {len(deliberate)} 件は誤爆かもしれません。左右Shift分離を有効にすると")
+        print("    そこまで判定できます（推奨値自体は確定した誤爆だけで算出しているので有効です）。")
     if len(combined) < n_mis * 0.8:
         print("  ※ 8割を切っています。flavor を tap-preferred にする、"
               "hold-while-undecided を外す等の")
