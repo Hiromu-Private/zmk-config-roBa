@@ -13,7 +13,12 @@
 set -euo pipefail
 
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BIN="$HOME/.local/bin/roba-keylog"
+# 素の CLI バイナリは linker-signed ad-hoc（designated requirement 無し）になり、
+# TCC が同一性を確立できず「入力監視」の許可が安定して効かない。
+# そのため .app バンドルにして正式に ad-hoc 署名する。
+APP="$HOME/Applications/RobaKeylog.app"
+BIN="$APP/Contents/MacOS/RobaKeylog"
+BUNDLE_ID="com.waggy.roba-keylog"
 LOG_DIR="$HOME/.local/share/roba-keylog"
 LABEL="com.waggy.roba-keylog"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
@@ -21,21 +26,46 @@ DOMAIN="gui/$(id -u)"
 
 cmd_build() {
   echo "==> ビルド中..."
-  local tmp
+  local tmp was_running=0
   tmp="$(mktemp -d)"
   cp "$SRC_DIR/RobaKeylog.swift" "$tmp/main.swift"
-  swiftc -O "$tmp/main.swift" -o "$tmp/roba-keylog"
-  mkdir -p "$(dirname "$BIN")"
-  # 実行中なら差し替えのため一旦止める
+  swiftc -O "$tmp/main.swift" -o "$tmp/RobaKeylog"
+
+  local stage="$tmp/RobaKeylog.app"
+  mkdir -p "$stage/Contents/MacOS"
+  mv "$tmp/RobaKeylog" "$stage/Contents/MacOS/RobaKeylog"
+  cat > "$stage/Contents/Info.plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key><string>RobaKeylog</string>
+    <key>CFBundleIdentifier</key><string>$BUNDLE_ID</string>
+    <key>CFBundleName</key><string>RobaKeylog</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>1.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSUIElement</key><true/>
+    <key>LSMinimumSystemVersion</key><string>13.0</string>
+</dict>
+</plist>
+EOF
+  codesign --force --sign - --identifier "$BUNDLE_ID" "$stage"
+  echo "==> 署名:"
+  codesign -dv "$stage" 2>&1 | grep -E "Identifier|Signature" | sed 's/^/    /'
+
   if launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then
     launchctl bootout "$DOMAIN/$LABEL" >/dev/null 2>&1 || true
-    local was_running=1
+    was_running=1
   fi
-  mv "$tmp/roba-keylog" "$BIN"
-  chmod 755 "$BIN"
+  mkdir -p "$HOME/Applications"
+  rm -rf "$APP"
+  mv "$stage" "$APP"
   rm -rf "$tmp"
-  echo "==> インストール完了: $BIN"
-  [[ "${was_running:-0}" == "1" ]] && { echo "==> 再起動します"; cmd_start; }
+  # 旧: 素のバイナリ版が残っていたら消す（TCC のリストに残ると紛らわしい）
+  rm -f "$HOME/.local/bin/roba-keylog"
+  echo "==> インストール完了: $APP"
+  [[ "$was_running" == "1" ]] && { echo "==> 再起動します"; cmd_start; }
   return 0
 }
 
@@ -72,9 +102,8 @@ cmd_start() {
   launchctl bootstrap "$DOMAIN" "$PLIST"
   echo "==> 計測を開始しました"
   echo
-  echo "初回は「入力監視」の許可ダイアログが出ます。"
-  echo "出ない場合は システム設定 → プライバシーとセキュリティ → 入力監視 で"
-  echo "roba-keylog を手動で追加・ONにしてください。"
+  echo "初回は「入力監視」の許可が必要です（'roba-log permit' で設定画面を開けます）。"
+  echo "リストの RobaKeylog を ON にしてください。"
   echo
   sleep 2
   cmd_status
@@ -113,9 +142,12 @@ cmd_status() {
 
 cmd_permit() {
   echo "「入力監視」の設定画面を開きます。"
-  echo "リストの roba-keylog を ON にしてください。"
-  echo "見つからない場合は「+」→ Cmd+Shift+G で次のパスを貼り付け:"
-  echo "  $BIN"
+  echo
+  echo "  1. 古い 'roba-keylog' の項目があれば「−」で削除する"
+  echo "  2. 'RobaKeylog' を ON にする"
+  echo "     無ければ「+」→ Cmd+Shift+G で次を貼り付け:"
+  echo "       $APP"
+  echo
   open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
 }
 

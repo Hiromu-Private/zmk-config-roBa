@@ -60,8 +60,22 @@ macOS 上では左右どちらの Shift も同じ働きをするので、使用�
 [roba-keylog] 入力監視: 許可済み   ← これが出ていないと何も記録されない
 ```
 
-未許可なら `./roba-log permit` で設定画面を開き、`roba-keylog` を ON にする。
+未許可なら `./roba-log permit` で設定画面を開き、`RobaKeylog` を ON にする。
 権限を変えると macOS がプロセスを落とすが、`KeepAlive` で自動的に復帰する。
+
+### なぜ .app バンドルなのか
+
+最初は `~/.local/bin/roba-keylog` に素の実行ファイルとして置いたが、**入力監視の許可が
+まったく効かなかった**。原因は署名で、`swiftc` が吐く実行ファイルは linker-signed の
+ad-hoc 署名になり `Internal requirements=none`（designated requirement 無し）だった。
+TCC はこれを同一のプログラムとして扱えない。
+
+そこで `~/Applications/RobaKeylog.app` として Info.plist 付きのバンドルにまとめ、
+`codesign --force --sign - --identifier com.waggy.roba-keylog` で正式に署名している。
+`LSUIElement` を立てているので Dock にもメニューバーにも出ない。
+
+**注意: `roba-log build` で作り直すと cdhash が変わり、入力監視の許可がリセットされる。**
+再ビルドしたら `./roba-log permit` でもう一度 ON にすること。
 
 ### ファームウェアの書き込み
 
