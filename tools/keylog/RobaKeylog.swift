@@ -81,14 +81,42 @@ func label(for keyCode: Int64) -> String {
 var timebase = mach_timebase_info_data_t()
 mach_timebase_info(&timebase)
 
-/// CGEvent のハードウェアタイムスタンプ（mach absolute time）をミリ秒に変換
-func machToMs(_ ts: UInt64) -> Double {
-    Double(ts) * Double(timebase.numer) / Double(timebase.denom) / 1_000_000.0
+// 単位に注意。この2つは別物で、取り違えると timebase 倍（Apple Silicon で 41.67 倍）ずれる。
+//   mach_absolute_time()  … tick。ns にするには numer/denom を掛ける
+//   CGEvent.timestamp     … 既に ns。換算してはいけない
+
+/// mach_absolute_time() の tick をミリ秒に変換
+func machToMs(_ ticks: UInt64) -> Double {
+    Double(ticks) * Double(timebase.numer) / Double(timebase.denom) / 1_000_000.0
+}
+
+/// CGEvent のハードウェアタイムスタンプ（ns）をミリ秒に変換
+func eventToMs(_ ns: UInt64) -> Double {
+    Double(ns) / 1_000_000.0
 }
 
 /// 起動時に「mach 時刻 → 壁時計」の対応を1回だけ取る（後からログを日時に戻せるように）
 let bootMachMs = machToMs(mach_absolute_time())
 let bootWallMs = Date().timeIntervalSince1970 * 1000.0
+
+/// 最初のイベントで単位の取り違えを自己診断する（黙って壊れるのを防ぐ）
+var unitChecked = false
+func checkUnits(_ eventNs: UInt64) {
+    guard !unitChecked else { return }
+    unitChecked = true
+    let nowMs = machToMs(mach_absolute_time())
+    let evMs = eventToMs(eventNs)
+    let ratio = evMs / nowMs
+    let msg: String
+    if ratio < 0.5 || ratio > 2.0 {
+        msg = "[roba-keylog] ⚠ タイムスタンプの単位が想定と違います "
+            + "(event=\(Int(evMs))ms vs mach=\(Int(nowMs))ms, 比=\(String(format: "%.2f", ratio)))\n"
+            + "[roba-keylog]   このままだと計測値が全てずれます。eventToMs を見直してください。\n"
+    } else {
+        msg = "[roba-keylog] 時刻の単位チェック OK (比=\(String(format: "%.3f", ratio)))\n"
+    }
+    FileHandle.standardError.write(msg.data(using: .utf8)!)
+}
 
 // MARK: - コンテキスト取得（Shift 押下時のみサンプリング）
 
@@ -161,7 +189,8 @@ let writer = LogWriter()
 // MARK: - イベントタップ
 
 func handle(event: CGEvent, type: CGEventType) {
-    let t = machToMs(event.timestamp)
+    checkUnits(event.timestamp)
+    let t = eventToMs(event.timestamp)
     let code = event.getIntegerValueField(.keyboardEventKeycode)
 
     switch type {
