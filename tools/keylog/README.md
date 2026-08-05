@@ -83,6 +83,10 @@ roBa は **右半分 (roBa_R) が central** で、キーマップは central 側
 （`boards/shields/roBa/Kconfig.defconfig` の `SHIELD_ROBA_R` に `ZMK_SPLIT_ROLE_CENTRAL=y`）。
 キーマップだけを変えた場合、書き込むのは **`roBa_R-seeeduino_xiao_ble-zmk.uf2` だけでよい**。
 
+> **⚠ ZMK Studio を使ったことがあるなら uf2 だけでは反映されない。**
+> Studio で編集したキーマップは本体のフラッシュに保存され、uf2 より優先される。
+> 詳細と対処は [STUDIO-SETUP.md](STUDIO-SETUP.md) を参照。
+
 ## レポートの読み方
 
 ```
