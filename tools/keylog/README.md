@@ -43,15 +43,31 @@ macOS 上では左右どちらの Shift も同じ働きをするので、使用�
 ```bash
 ./roba-log build     # ビルドして ~/.local/bin/roba-keylog へインストール
 ./roba-log start     # 計測開始（LaunchAgent 登録・再ログイン後も継続）
+./roba-log permit    # 「入力監視」の許可設定を開く
 ./roba-log status    # 稼働状況とログ量
 ./roba-log report    # 解析レポート
 ./roba-log stop      # 計測停止
 ./roba-log purge     # ログ全削除
 ```
 
-初回 `start` 時に「入力監視」の許可が必要。ダイアログが出ない場合は
-**システム設定 → プライバシーとセキュリティ → 入力監視** で `roba-keylog` を ON にして、
-`./roba-log stop && ./roba-log start` で再起動する。
+### 「入力監視」の許可が必須
+
+**`CGEvent.tapCreate` は権限が無くても成功し、イベントが1件も来ないという壊れ方をする。**
+そのため起動時に `CGPreflightListenEventAccess()` で明示的に確認し、結果を stderr に残している。
+`./roba-log status` の末尾で必ず確認すること。
+
+```
+[roba-keylog] 入力監視: 許可済み   ← これが出ていないと何も記録されない
+```
+
+未許可なら `./roba-log permit` で設定画面を開き、`roba-keylog` を ON にする。
+権限を変えると macOS がプロセスを落とすが、`KeepAlive` で自動的に復帰する。
+
+### ファームウェアの書き込み
+
+roBa は **右半分 (roBa_R) が central** で、キーマップは central 側だけが持つ
+（`boards/shields/roBa/Kconfig.defconfig` の `SHIELD_ROBA_R` に `ZMK_SPLIT_ROLE_CENTRAL=y`）。
+キーマップだけを変えた場合、書き込むのは **`roBa_R-seeeduino_xiao_ble-zmk.uf2` だけでよい**。
 
 ## レポートの読み方
 

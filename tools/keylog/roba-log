@@ -3,6 +3,7 @@
 #
 #   roba-log build    ビルドして ~/.local/bin/roba-keylog へインストール
 #   roba-log start    計測開始（LaunchAgent 登録・再ログイン後も継続）
+#   roba-log permit   「入力監視」の許可設定を開く
 #   roba-log stop     計測停止
 #   roba-log status   稼働状況とログ量
 #   roba-log report   解析レポートを表示
@@ -110,6 +111,14 @@ cmd_status() {
   fi
 }
 
+cmd_permit() {
+  echo "「入力監視」の設定画面を開きます。"
+  echo "リストの roba-keylog を ON にしてください。"
+  echo "見つからない場合は「+」→ Cmd+Shift+G で次のパスを貼り付け:"
+  echo "  $BIN"
+  open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
+}
+
 cmd_report() { python3 "$SRC_DIR/analyze.py" "$@"; }
 
 cmd_tail() { tail -f "$LOG_DIR/$(date +%F).jsonl"; }
@@ -122,6 +131,7 @@ cmd_purge() {
 case "${1:-}" in
   build)  cmd_build ;;
   start)  cmd_start ;;
+  permit) cmd_permit ;;
   stop)   cmd_stop ;;
   status) cmd_status ;;
   report) shift; cmd_report "$@" ;;

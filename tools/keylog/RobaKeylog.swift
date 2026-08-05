@@ -191,6 +191,19 @@ func handle(event: CGEvent, type: CGEventType) {
     }
 }
 
+// MARK: - 権限チェック
+//
+// tapCreate は権限が無くても成功してイベントが1件も来ない、という失敗の仕方をする。
+// 起動時に明示的に確認して stderr に残す。
+
+let hasAccess = CGPreflightListenEventAccess()
+FileHandle.standardError.write(
+    "[roba-keylog] 入力監視: \(hasAccess ? "許可済み" : "未許可")\n".data(using: .utf8)!)
+if !hasAccess {
+    FileHandle.standardError.write("[roba-keylog] 許可ダイアログを要求します\n".data(using: .utf8)!)
+    CGRequestListenEventAccess()
+}
+
 var globalTap: CFMachPort?
 
 let callback: CGEventTapCallBack = { _, type, event, _ in
