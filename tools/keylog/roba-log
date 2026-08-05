@@ -1,0 +1,131 @@
+#!/bin/bash
+# roba-log — 打鍵タイミング計測の開始/停止/確認
+#
+#   roba-log build    ビルドして ~/.local/bin/roba-keylog へインストール
+#   roba-log start    計測開始（LaunchAgent 登録・再ログイン後も継続）
+#   roba-log stop     計測停止
+#   roba-log status   稼働状況とログ量
+#   roba-log report   解析レポートを表示
+#   roba-log tail     直近のイベントを流し見
+#   roba-log purge    ログを全削除
+
+set -euo pipefail
+
+SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BIN="$HOME/.local/bin/roba-keylog"
+LOG_DIR="$HOME/.local/share/roba-keylog"
+LABEL="com.waggy.roba-keylog"
+PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+DOMAIN="gui/$(id -u)"
+
+cmd_build() {
+  echo "==> ビルド中..."
+  local tmp
+  tmp="$(mktemp -d)"
+  cp "$SRC_DIR/RobaKeylog.swift" "$tmp/main.swift"
+  swiftc -O "$tmp/main.swift" -o "$tmp/roba-keylog"
+  mkdir -p "$(dirname "$BIN")"
+  # 実行中なら差し替えのため一旦止める
+  if launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then
+    launchctl bootout "$DOMAIN/$LABEL" >/dev/null 2>&1 || true
+    local was_running=1
+  fi
+  mv "$tmp/roba-keylog" "$BIN"
+  chmod 755 "$BIN"
+  rm -rf "$tmp"
+  echo "==> インストール完了: $BIN"
+  [[ "${was_running:-0}" == "1" ]] && { echo "==> 再起動します"; cmd_start; }
+  return 0
+}
+
+write_plist() {
+  cat > "$PLIST" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>$LABEL</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$BIN</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>StandardErrorPath</key>
+    <string>$LOG_DIR/stderr.log</string>
+</dict>
+</plist>
+EOF
+}
+
+cmd_start() {
+  [[ -x "$BIN" ]] || { echo "先に 'roba-log build' を実行してください"; exit 1; }
+  mkdir -p "$LOG_DIR"
+  write_plist
+  launchctl bootout "$DOMAIN/$LABEL" >/dev/null 2>&1 || true
+  launchctl bootstrap "$DOMAIN" "$PLIST"
+  echo "==> 計測を開始しました"
+  echo
+  echo "初回は「入力監視」の許可ダイアログが出ます。"
+  echo "出ない場合は システム設定 → プライバシーとセキュリティ → 入力監視 で"
+  echo "roba-keylog を手動で追加・ONにしてください。"
+  echo
+  sleep 2
+  cmd_status
+}
+
+cmd_stop() {
+  launchctl bootout "$DOMAIN/$LABEL" >/dev/null 2>&1 || true
+  echo "==> 計測を停止しました（ログは $LOG_DIR に残ります）"
+}
+
+cmd_status() {
+  if launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then
+    local pid
+    pid="$(launchctl print "$DOMAIN/$LABEL" 2>/dev/null | awk '/^\tpid = /{print $3}')"
+    echo "状態: 稼働中${pid:+ (pid $pid)}"
+  else
+    echo "状態: 停止中"
+  fi
+  echo "ログ: $LOG_DIR"
+  if [[ -d "$LOG_DIR" ]]; then
+    local total=0
+    for f in "$LOG_DIR"/*.jsonl; do
+      [[ -e "$f" ]] || continue
+      local n
+      n="$(wc -l < "$f" | tr -d ' ')"
+      total=$((total + n))
+      printf "  %s  %6s イベント\n" "$(basename "$f")" "$n"
+    done
+    echo "  合計: $total イベント"
+  fi
+  if [[ -s "$LOG_DIR/stderr.log" ]]; then
+    echo "--- stderr (末尾3行) ---"
+    tail -3 "$LOG_DIR/stderr.log"
+  fi
+}
+
+cmd_report() { python3 "$SRC_DIR/analyze.py" "$@"; }
+
+cmd_tail() { tail -f "$LOG_DIR/$(date +%F).jsonl"; }
+
+cmd_purge() {
+  read -rp "本当に全ログを削除しますか？ [y/N] " ans
+  [[ "$ans" == "y" ]] && rm -f "$LOG_DIR"/*.jsonl && echo "削除しました" || echo "中止しました"
+}
+
+case "${1:-}" in
+  build)  cmd_build ;;
+  start)  cmd_start ;;
+  stop)   cmd_stop ;;
+  status) cmd_status ;;
+  report) shift; cmd_report "$@" ;;
+  tail)   cmd_tail ;;
+  purge)  cmd_purge ;;
+  *) sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' ;;
+esac
