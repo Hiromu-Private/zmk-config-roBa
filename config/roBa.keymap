@@ -271,6 +271,10 @@
             sensor-bindings = <&scroll_up_down>;
         };
 
+        // ⚠ このレイヤーへの到達手段はキーマップ中に存在しない（呼び出す
+        //    `&mo 1` / `&lt 1` / `&to 1` が1つも無い）。F キーは layer_8 へ移した。
+        //    レイヤー番号は定義順で決まり、削除すると以降の `&lt 2` 等が全部ずれる
+        //    ため、定義自体は残してある。
         FUNCTION {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
@@ -342,12 +346,18 @@
             >;
         };
 
+        // layer_8 — `&lt 8 TAB`（左親指）で入る。中括弧・不等号と F キー。
+        //
+        // F1〜F12 をここへ置いた（2026-08-07）。FUNCTION レイヤー(1) に定義は
+        // あるが、`&mo 1` / `&lt 1` / `&to 1` がキーマップ中に1つも無く到達手段が
+        // 存在しなかったため、F キーが打てない状態だった。
+        // 入口が左親指なので、押しやすいよう右手側にまとめている。
         layer_8 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans               &trans               &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp LESS_THAN        &kp GREATER_THAN     &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                    &trans
+&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3               &kp F4               &kp F5
+&trans  &trans  &trans  &trans  &trans  &trans      &kp F6   &kp F7  &kp F8  &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &kp F9   &kp F10 &kp F11 &kp LESS_THAN        &kp GREATER_THAN     &kp F12
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                                                    &trans
             >;
         };
     };

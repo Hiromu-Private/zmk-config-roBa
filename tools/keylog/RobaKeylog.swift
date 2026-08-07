@@ -10,8 +10,9 @@
 //     - 母音 a i u e o（ローマ字入力の解析に必要）
 //     - 修飾キー（LSFT/RSFT/LCTL/... ）
 //     - BS / ENT / SPC / TAB / ESC / EISU / KANA（構造と訂正の検出に必要）
+//     - 記号（記号レイヤーの配列検討に必要。2026-08-07〜。--no-symbols で無効化）
 //   それ以外のキーはすべて "L"（左手）/ "R"（右手）に匿名化する。
-//   子音が落ちるため、ログから文章もパスワードも復元できない。
+//   子音と数字が落ちるため、ログから文章もパスワードも復元できない。
 //   --full を付けると全キーを実名記録する（解析精度は上がるが実質キーロガー）。
 //
 // 権限: 「入力監視 (Input Monitoring)」が必要。
@@ -26,6 +27,8 @@ import AppKit
 let args = CommandLine.arguments
 let fullMode = args.contains("--full")
 let stdoutMode = args.contains("--stdout")
+// 記号レイヤーの配列検討用。既定で有効（2026-08-07〜）
+let symbolMode = !args.contains("--no-symbols")
 
 let logDir = ("~/.local/share/roba-keylog" as NSString).expandingTildeInPath
 
@@ -38,6 +41,19 @@ let namedKeys: [Int64: String] = [
     51: "BS", 117: "DEL",
     36: "ENT", 49: "SPC", 48: "TAB", 53: "ESC",
     102: "EISU", 104: "KANA",
+]
+
+// 記号レイヤーの配列検討用に、記号だけは実名で残す（--no-symbols で無効化）。
+//
+// キーコードではなく「実際に入力された文字」で判定する。roBa は JP_* の define で
+// JIS 配列として記号を送るため、キーコードと記号の対応が ANSI とずれるため。
+// 英字・数字はこの集合に入らないので従来どおり L/R に潰れる＝文章もパスワードも
+// 復元できない性質は変わらない（数字を残すと PIN やカード番号が読めてしまうため
+// 意図的に除外している）。
+let symbolChars: Set<Character> = [
+    "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
+    ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`",
+    "{", "|", "}", "~", "¥",
 ]
 
 // QWERTY 左手側のキーコード（roBa も左半分は QWERTY 配置）
@@ -67,13 +83,43 @@ let modifierMasks: [Int64: UInt64] = [
     63: 0x00800000,                   // Fn (maskSecondaryFn)
 ]
 
-func label(for keyCode: Int64) -> String {
-    if fullMode {
-        if let n = namedKeys[keyCode] { return n }
-        return "k\(keyCode)"
+// 入力された文字が記号なら、その文字を返す。
+func symbolLabel(of event: CGEvent) -> String? {
+    guard symbolMode else { return nil }
+    var length = 0
+    var chars = [UniChar](repeating: 0, count: 4)
+    event.keyboardGetUnicodeString(maxStringLength: 4, actualStringLength: &length,
+                                   unicodeString: &chars)
+    guard length == 1, let scalar = Unicode.Scalar(chars[0]) else { return nil }
+    let c = Character(scalar)
+    return symbolChars.contains(c) ? String(c) : nil
+}
+
+// keyDown 時に確定したラベルを keyUp でも使う。
+// Shift を先に離すと keyUp 側の unicodeString が別の文字になり、down/up の対応が
+// 壊れる（"(" で押して "8" で離す等）ため、押した時のラベルを持ち回る。
+var labelAtDown: [Int64: String] = [:]
+
+func label(for keyCode: Int64, event: CGEvent, isDown: Bool) -> String {
+    if !isDown, let cached = labelAtDown.removeValue(forKey: keyCode) { return cached }
+    let resolved: String
+    if let n = namedKeys[keyCode] {
+        resolved = n
+    } else if let s = symbolLabel(of: event) {
+        resolved = s
+    } else if fullMode {
+        resolved = "k\(keyCode)"
+    } else {
+        resolved = leftHandKeys.contains(keyCode) ? "L" : "R"
     }
-    if let n = namedKeys[keyCode] { return n }
-    return leftHandKeys.contains(keyCode) ? "L" : "R"
+    if isDown { labelAtDown[keyCode] = resolved }
+    return resolved
+}
+
+// 記号には " と \ が含まれるので JSON 文字列として出す前に潰す
+func jsonEscape(_ s: String) -> String {
+    s.replacingOccurrences(of: "\\", with: "\\\\")
+     .replacingOccurrences(of: "\"", with: "\\\"")
 }
 
 // MARK: - 時刻
@@ -166,7 +212,7 @@ final class LogWriter {
         handle?.seekToEndOfFile()
         // セッションヘッダ（mach 時刻と壁時計の対応・モード）
         let header = "{\"hdr\":1,\"boot_mach_ms\":\(bootMachMs),\"boot_wall_ms\":\(bootWallMs)," +
-                     "\"mode\":\"\(fullMode ? "full" : "anon")\",\"pid\":\(getpid())}\n"
+                     "\"mode\":\"\(fullMode ? "full" : (symbolMode ? "anon+sym" : "anon"))\",\"pid\":\(getpid())}\n"
         handle?.write(header.data(using: .utf8)!)
     }
 
@@ -208,10 +254,12 @@ func handle(event: CGEvent, type: CGEventType) {
     case .keyDown:
         // オートリピートはノイズになるので捨てる
         if event.getIntegerValueField(.keyboardEventAutorepeat) != 0 { return }
-        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"d\",\"k\":\"\(label(for: code))\",\"kb\":\(kb)}")
+        let dk = jsonEscape(label(for: code, event: event, isDown: true))
+        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"d\",\"k\":\"\(dk)\",\"kb\":\(kb)}")
 
     case .keyUp:
-        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"u\",\"k\":\"\(label(for: code))\",\"kb\":\(kb)}")
+        let uk = jsonEscape(label(for: code, event: event, isDown: false))
+        writer.append("{\"t\":\(String(format: "%.1f", t)),\"e\":\"u\",\"k\":\"\(uk)\",\"kb\":\(kb)}")
 
     case .flagsChanged:
         guard let name = modifierKeys[code], let mask = modifierMasks[code] else { return }
@@ -292,6 +340,6 @@ signal(SIGTERM) { _ in writer.flush(); exit(0) }
 signal(SIGINT)  { _ in writer.flush(); exit(0) }
 
 FileHandle.standardError.write(
-    "[roba-keylog] 計測開始 mode=\(fullMode ? "full" : "anon") out=\(logDir)\n".data(using: .utf8)!)
+    "[roba-keylog] 計測開始 mode=\(fullMode ? "full" : (symbolMode ? "anon+sym" : "anon")) out=\(logDir)\n".data(using: .utf8)!)
 
 CFRunLoopRun()
