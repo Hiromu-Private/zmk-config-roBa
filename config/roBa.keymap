@@ -184,26 +184,43 @@
             tapping-term-ms = <200>;
         };
 
-        // ── 計測中（2026-08-05〜）─────────────────────────────
-        // Z/Shift の誤爆を実測するため、position 34 の素の Shift を
-        // RIGHT_SHIFT に変更している（macOS 上の機能は同じ）。
-        //   LSFT = このキー(position 22)由来 → 誤爆候補
-        //   RSFT = position 34 由来          → 意図的な Shift
-        // 計測が終わったら position 34 を LEFT_SHIFT に戻してよい。
-        // 手順: tools/keylog/README.md
+        // ── 実測に基づくチューニング（2026-08-07）──────────────
+        // 2026-08-06 の実測 37,462 イベントから決めた値。根拠:
+        //
+        //   Z を hold して他キーを打った 271 件は押下時間が二峰性だった。
+        //     0-120ms   78 件  相手は R/L  → tap のつもりが hold になった誤爆
+        //     120-200ms  9 件  （谷）
+        //     200ms 以上 184 件  相手は ENT 125 件 → 意図的な Shift+Enter・大文字
+        //   意図的な hold の押下は p50 = 298ms。誤爆と 150ms できれいに切れる。
+        //
+        // flavor: balanced → tap-preferred
+        //   balanced は「他キーを押して離した」時点で tapping-term 内でも hold を
+        //   確定させる。誤爆 78 件のうち 62 件がこれで、tapping-term をいくら
+        //   伸ばしても救えなかった。tap-preferred は tapping-term を超えるまで
+        //   hold にしないので、この層が丸ごと消える。
+        //
+        // tapping-term-ms: 100 → 150
+        //   素の物理キーの押下は p50 64ms / p90 104ms。100 では通常打鍵の
+        //   11.7% が hold 側に落ちる。150 なら 1.5%。
+        //
+        // hold-while-undecided を削除
+        //   押した瞬間に Shift がホストへ漏れ、tap 成立時も LSFT の down/up が
+        //   macOS に届いていた（実測 98 件）。ことえりへの余計な Shift を止める。
+        //
+        // ※ position 34 は計測用に RIGHT_SHIFT のまま（macOS 上の機能は同じ）。
+        //   Before/After を比べるため、効果確認が済むまで戻さない。
         // ──────────────────────────────────────────────────────
         mt_z_custom: mt_z_custom {
             compatible = "zmk,behavior-hold-tap";
             label = "MT_Z_CUSTOM";
             #binding-cells = <2>;
-            flavor = "balanced";
+            flavor = "tap-preferred";
             quick-tap-ms = <0>;
-            tapping-term-ms = <100>;
+            tapping-term-ms = <150>;
             bindings = <&kp>, <&kp>;
 
             retro-tap;
             hold-trigger-key-positions = <37 24 13 11 25 5 6 7 8 19 20 18 16 17 28 29 30 31 32 9 21 33 1 2 4 3 12 14 27 26 23 15 0 10 34 35 36 38 39 40 41>;
-            hold-while-undecided;
         };
 
         // 新しいスクロール動作の追加
