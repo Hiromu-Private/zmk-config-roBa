@@ -28,8 +28,26 @@
 #define JP_KANA         LANGUAGE_1        // かな
 #define JP_EISU         LANGUAGE_2        // 英数
 #define JP_HANZEN       GRAVE             // 半角/全角
-#define MOUSE 4 // 各自のマウスレイヤーに合わせて設定
+
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100  // #includeのあとのあたりにスクロール量を変更
+
+// ── v2 レイヤー構成（2026-08-14 再設計）─────────────────────
+// 5日分のキーログ実測（44,345打鍵）に基づく。設計の記録は
+// My_Ops_Hub memory/reference_roba_keymap.md を参照。
+//
+//   0 default  — ベース（変更なし。, . - ! の筋肉記憶は温存）
+//   1 SYM_NUM  — 左親指 SPACE 長押し → 右手に頻出記号
+//                （/ @ ; : をホーム段へ。旧 NUM と旧 Sym_Num を統合）
+//   2 NUMPAD   — 右親指 SPACE 長押し → 左手テンキー
+//                （. , を KP_DOT / KP_COMMA 化＝かなモードでも半角）
+//   3 SCROLL   — ENTER 長押し＋トラックボール scroll-layers
+//   4 SYS      — Q 長押し → BT・bootloader・Fキー
+//   5 JUMP     — TAB 長押し → 右手上段=⌃⌥1..5（Dia スペース、Raycast
+//                スクリプト経由でどこからでも）、ホーム段=⌘1..5（ピン/タブ）
+//
+// 旧 FUNCTION(1)・旧 MOUSE(4)・旧 Sym_Num(7) は到達不能または統合により削除。
+// 矢印クラスタも削除（実測で Ctrl+IKJL(Karabiner) しか使われていない）。
+// ─────────────────────────────────────────────────────────
 
 &mt {
     flavor = "balanced";
@@ -45,21 +63,9 @@
     hold-while-undecided-linger;
 }; // ダブルクリックに必要な時間を設定
 &trackball {
-    // automouse-layer = <4>;  // コメントアウトしてオートマウスレイヤーを無効化
+    // オートマウスレイヤーは無効（有効化するなら専用レイヤーを追加して番号を指定）
 
-    scroll-layers = <5>;
-
-    // arrows {
-    //     layers = <3>;
-    //     bindings =
-    //         <&kp RIGHT_ARROW>,
-    //         <&kp LEFT_ARROW>,
-    //         <&kp UP_ARROW>,
-    //         <&kp DOWN_ARROW>;
-    //     tick = <10>;
-    //     wait-ms = <5>;
-    //     tap-ms = <5>;
-    // };
+    scroll-layers = <3>;
 };
 
 / {
@@ -113,33 +119,11 @@
     };
 
     macros {
-        to_layer_0: to_layer_0 {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-            label = "TO_LAYER_0";
-        };
-
         browser_back: browser_back {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp LG(LEFT_ARROW)>;
             label = "BROWSER_BACK";
-        };
-
-        mkp_exit_AML: mkp_exit_AML {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&sl 0>;
-
-            label = "MKP_EXIT_AML";
         };
 
         zoom_in: zoom_in {
@@ -175,15 +159,6 @@
     };
 
     behaviors {
-        lt_to_layer_0: lt_to_layer_0 {
-            compatible = "zmk,behavior-hold-tap";
-            label = "LAYER_TAP_TO_0";
-            bindings = <&mo>, <&to_layer_0>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-        };
-
         // ── 実測に基づくチューニング（2026-08-07）──────────────
         // 2026-08-06 の実測 37,462 イベントから決めた値。根拠:
         //
@@ -262,56 +237,44 @@
 
         default_layer {
             bindings = <
-&lt 6 Q                    &kp W         &kp E         &kp R                                 &kp T                                     &kp Y                    &kp U  &kp I     &kp O     &kp P
-&mt LEFT_CONTROL A         &kp S         &kp D         &kp F                                 &kp G        &mkp MB3        &kp MINUS    &kp H                    &kp J  &kp K     &kp L     &lt 5 ENTER
+&lt 4 Q                    &kp W         &kp E         &kp R                                 &kp T                                     &kp Y                    &kp U  &kp I     &kp O     &kp P
+&mt LEFT_CONTROL A         &kp S         &kp D         &kp F                                 &kp G        &mkp MB3        &kp MINUS    &kp H                    &kp J  &kp K     &kp L     &lt 3 ENTER
 &mt_z_custom LEFT_SHIFT Z  &kp X         &kp C         &kp V                                 &kp B        &kp PERIOD      &kp COMMA    &kp N                    &kp M  &mkp MB1  &mkp MB2  &kp BACKSPACE
-&kp RIGHT_SHIFT            &kp LEFT_WIN  &kp LEFT_ALT  &mt_comand_custom LEFT_COMMAND LANG2  &lt 2 SPACE  &lt 8 TAB       &lt 3 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
+&kp RIGHT_SHIFT            &kp LEFT_WIN  &kp LEFT_ALT  &mt_comand_custom LEFT_COMMAND LANG2  &lt 1 SPACE  &lt 5 TAB       &lt 2 SPACE  &mt RIGHT_COMMAND LANG1                             &kp ESC
             >;
 
             sensor-bindings = <&scroll_up_down>;
         };
 
-        // ⚠ このレイヤーへの到達手段はキーマップ中に存在しない（呼び出す
-        //    `&mo 1` / `&lt 1` / `&to 1` が1つも無い）。F キーは layer_8 へ移した。
-        //    レイヤー番号は定義順で決まり、削除すると以降の `&lt 2` 等が全部ずれる
-        //    ため、定義自体は残してある。
-        FUNCTION {
+        // 記号の家（旧 NUM ＋ 旧 Sym_Num を統合。左親指 SPACE 長押し → 右手で打つ）
+        //
+        // 実測頻度の一等地配置: / (ためらい425ms・最悪) を人差し指ホームに、
+        // @ (打ち直し率12.9%・最悪) を中指ホームに、; : を薬指・小指の隣接ペアに。
+        // " ' は上段の中指・薬指。! # $ % は旧位置のまま（実測で問題なし）。
+        // [27][28] は trans ＝ default の . , がレイヤー内でもそのまま打てる。
+        SYM_NUM {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
-&trans  &trans  &trans  &trans  &trans  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans  &trans  &trans  &trans  &kp F11
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                          &kp F12
-            >;
-        };
-
-        NUM {
-            bindings = <
-&kp EXCLAMATION  &kp JP_DQUOTE  &kp HASH  &kp DOLLAR   &kp PERCENT                                     &kp JP_AMPERSAND  &kp JP_QUOTE       &kp JP_LPAREN    &kp JP_RPAREN    &kp MINUS
-&trans           &trans         &trans    &kp JP_PLUS  &kp ASTERISK  &mkp MB3       &kp JP_UNDERSCORE  &kp SEMICOLON     &kp JP_COLON       &kp JP_LBRACKET  &kp JP_RBRACKET  &kp JP_CARET
-&trans           &trans         &trans    &kp MINUS    &kp PERIOD    &kp EQUAL      &trans             &kp JP_AT         &kp JP_UNDERSCORE  &kp COMMA        &kp PERIOD       &kp SLASH
-&trans           &trans         &trans    &trans       &trans        &trans         &trans             &trans                                                                 &kp JP_PIPE
+&kp EXCLAMATION  &kp JP_BACKQUOTE  &kp HASH  &kp DOLLAR    &kp PERCENT                                        &kp JP_AMPERSAND  &kp JP_DQUOTE    &kp JP_QUOTE     &kp JP_LPAREN  &kp JP_RPAREN
+&trans           &trans            &trans    &kp JP_PLUS   &kp JP_ASTERISK  &mkp MB3       &kp JP_UNDERSCORE  &kp JP_YEN        &kp SLASH        &kp JP_AT        &kp SEMICOLON  &kp JP_COLON
+&trans           &trans            &trans    &kp JP_EQUAL  &kp JP_TILDE     &trans         &trans             &kp JP_LBRACKET   &kp JP_RBRACKET  &kp JP_LBRACE    &kp JP_RBRACE  &kp JP_CARET
+&trans           &trans            &trans    &trans        &trans           &trans         &trans             &trans                                                             &kp JP_PIPE
             >;
 
             sensor-bindings = <&scroll_up_down>;
         };
 
-        ARROW {
+        // テンキー（旧 ARROW。右親指 SPACE 長押し → 左手で打つ）
+        //
+        // v2 変更: PERIOD → KP_DOT / COMMA → KP_COMMA。ことえりはテンキー入力を
+        // 半角で通すので、かなモードのまま「3.5」が打てる（。事故の根絶）。
+        // 右手の矢印クラスタ・HOME/END は削除（実測で Ctrl+IKJL しか使われていない）。
+        // BACKSPACE だけ数字入力中の訂正用に残す。
+        NUMPAD {
             bindings = <
-&kp ESCAPE  &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp JP_YEN                            &trans         &kp HOME        &kp UP_ARROW    &kp END          &trans
-&kp SLASH   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp JP_COLON   &mkp MB3       &trans  &kp BACKSPACE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &mo 7
-&kp SLASH   &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp SEMICOLON  &trans         &trans  &trans         &trans          &trans          &trans           &trans
-&trans      &kp KP_NUMBER_0  &kp PERIOD       &kp COMMA        &trans         &kp MINUS      &trans  &trans                                                          &trans
-            >;
-
-            sensor-bindings = <&scroll_up_down>;
-        };
-
-        MOUSE {
-            bindings = <
-&to_layer_0 Q              &to_layer_0 W             &to_layer_0 E         &to_layer_0 R                         &to_layer_0 T                                               &to_layer_0 Y            &to_layer_0 U  &to_layer_0 I      &to_layer_0 O      &to_layer_0 P
-&mt LEFT_CONTROL A         &to_layer_0 S             &to_layer_0 D         &to_layer_0 F                         &to_layer_0 G  &mkp MB3               &to_layer_0 MINUS     &to_layer_0 H            &to_layer_0 J  &to_layer_0 K      &to_layer_0 L      &lt_to_layer_0 5 ENTER
-&mt_z_custom LEFT_SHIFT Z  &to_layer_0 X             &to_layer_0 C         &to_layer_0 V                         &to_layer_0 B  &to_layer_0 COLON      &to_layer_0 QUESTION  &to_layer_0 N            &to_layer_0 M  &mkp_exit_AML MB1  &mkp_exit_AML MB2  &lt 5 BACKSPACE
-&to_layer_0 RIGHT_SHIFT    &to_layer_0 LEFT_COMMAND  &to_layer_0 LEFT_ALT  &mt_comand_custom LEFT_COMMAND LANG2  &lt 2 SPACE    &lt 3 TAB              &lt 3 SPACE           &mt RIGHT_COMMAND LANG1                                                       &to_layer_0 ESCAPE
+&kp ESCAPE  &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp JP_YEN                            &trans  &trans         &trans  &trans  &trans
+&kp SLASH   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp JP_COLON   &mkp MB3       &trans  &kp BACKSPACE  &trans  &trans  &trans  &trans
+&kp SLASH   &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp SEMICOLON  &trans         &trans  &trans         &trans  &trans  &trans  &trans
+&trans      &kp KP_NUMBER_0  &kp KP_DOT       &kp KP_COMMA     &trans         &kp MINUS      &trans  &trans                                 &trans
             >;
 
             sensor-bindings = <&scroll_up_down>;
@@ -328,36 +291,32 @@
             sensor-bindings = <&inc_dec_kp LG(MINUS) LG(JP_PLUS)>;
         };
 
-        layer_6 {
+        // システム（旧 layer_6。Q 長押し）: Bluetooth・bootloader に加えて
+        // 旧 FUNCTION/旧 layer_8 から F1-F12 と < > を収容（実測ほぼ未使用のため隅で十分）
+        SYS {
             bindings = <
-&trans  &trans        &trans        &trans        &trans                           &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans        &trans        &trans        &trans        &trans
-&trans  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans      &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
-&trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans                                                  &bt BT_CLR_ALL
+&trans  &kp LESS_THAN  &kp GREATER_THAN  &trans        &trans                            &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+&kp F1  &kp F2         &kp F3            &kp F4        &kp F5   &trans      &trans       &kp F6        &kp F7        &kp F8        &kp F9        &kp F10
+&trans  &kp NUMBER_1   &kp NUMBER_2     &kp NUMBER_3  &kp F11  &kp F12     &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
+&trans  &trans         &trans           &trans        &trans   &trans      &trans       &trans                                                  &bt BT_CLR_ALL
             >;
         };
 
-        Sym_Num {
-            bindings = <
-&trans  &kp N7  &kp N8  &kp N9  &trans                      &kp JP_AMPERSAND  &kp JP_QUOTE     &kp JP_EQUAL      &kp JP_CARET       &kp JP_YEN
-&trans  &kp N4  &kp N5  &kp N6  &trans  &trans      &trans  &kp JP_PLUS       &kp JP_TILDE     &kp JP_PIPE       &kp JP_AT          &kp JP_COLON
-&trans  &kp N1  &kp N2  &kp N3  &trans  &trans      &trans  &none             &kp JP_ASTERISK  &kp JP_BACKQUOTE  &kp JP_UNDERSCORE  &kp SEMICOLON
-&trans  &kp N0  &trans  &trans  &trans  &trans      &trans  &trans                                                                  &trans
-            >;
-        };
-
-        // layer_8 — `&lt 8 TAB`（左親指）で入る。中括弧・不等号と F キー。
+        // JUMP（新設。左親指 TAB 長押し → 右手で行き先を1打）
         //
-        // F1〜F12 をここへ置いた（2026-08-07）。FUNCTION レイヤー(1) に定義は
-        // あるが、`&mo 1` / `&lt 1` / `&to 1` がキーマップ中に1つも無く到達手段が
-        // 存在しなかったため、F キーが打てない状態だった。
-        // 入口が左親指なので、押しやすいよう右手側にまとめている。
-        layer_8 {
+        //   上段 Y U I O P   = ⌃⌥1..5 → Raycast スクリプト「Dia スペース N」
+        //                      （どのアプリに居ても Dia を前面化してスペース切替）
+        //   ホーム段 H J K L ENT = ⌘1..5 → Dia のピン留めアプリ。他アプリでも
+        //                      「N番目」(Slack ワークスペース・ブラウザタブ等) に効く
+        //
+        // アプリ切替（⇧⌘E 等）はレイヤー化しない方針（2026-08-14 ユーザー判断。
+        // ショートカットとして完成しており、通常キーボードとの筋肉記憶を共有するため）
+        JUMP {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3               &kp F4               &kp F5
-&trans  &trans  &trans  &trans  &trans  &trans      &kp F6   &kp F7  &kp F8  &kp LS(JP_LBRACKET)  &kp LS(JP_RBRACKET)  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &kp F9   &kp F10 &kp F11 &kp LESS_THAN        &kp GREATER_THAN     &kp F12
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                                                    &trans
+&trans  &trans  &trans  &trans  &trans                      &kp LC(LA(N1))  &kp LC(LA(N2))  &kp LC(LA(N3))  &kp LC(LA(N4))  &kp LC(LA(N5))
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &kp LG(N1)      &kp LG(N2)      &kp LG(N3)      &kp LG(N4)      &kp LG(N5)
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans          &trans          &trans          &trans          &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                          &trans
             >;
         };
     };
