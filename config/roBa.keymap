@@ -248,16 +248,17 @@
 
         // 記号の家（旧 NUM ＋ 旧 Sym_Num を統合。左親指 SPACE 長押し → 右手で打つ）
         //
-        // 実測頻度の一等地配置: / (ためらい425ms・最悪) を人差し指ホームに、
-        // @ (打ち直し率12.9%・最悪) を中指ホームに、; : を薬指・小指の隣接ペアに。
-        // " ' は上段の中指・薬指。! # $ % は旧位置のまま（実測で問題なし）。
+        // 最上段は JIS 数字段の Shift 記号ミラー（! " # $ % / & ' ( ) -）＝
+        // 「2 の位置に "」という既存の暗記と一致させる（2026-08-14 ユーザー指定）。
+        // ホーム段: ; : は多用するので人差し指・中指の一等地に隣接ペアで。
+        // / (ためらい425ms) は薬指ホーム、@ (打ち直し12.9%) は人差し指の内寄せ。
         // [27][28] は trans ＝ default の . , がレイヤー内でもそのまま打てる。
         SYM_NUM {
             bindings = <
-&kp EXCLAMATION  &kp JP_BACKQUOTE  &kp HASH  &kp DOLLAR    &kp PERCENT                                        &kp JP_AMPERSAND  &kp JP_DQUOTE    &kp JP_QUOTE     &kp JP_LPAREN  &kp JP_RPAREN
-&trans           &trans            &trans    &kp JP_PLUS   &kp JP_ASTERISK  &mkp MB3       &kp JP_UNDERSCORE  &kp JP_YEN        &kp SLASH        &kp JP_AT        &kp SEMICOLON  &kp JP_COLON
-&trans           &trans            &trans    &kp JP_EQUAL  &kp JP_TILDE     &trans         &trans             &kp JP_LBRACKET   &kp JP_RBRACKET  &kp JP_LBRACE    &kp JP_RBRACE  &kp JP_CARET
-&trans           &trans            &trans    &trans        &trans           &trans         &trans             &trans                                                             &kp JP_PIPE
+&kp EXCLAMATION  &kp JP_DQUOTE  &kp HASH  &kp DOLLAR    &kp PERCENT                                        &kp JP_AMPERSAND  &kp JP_QUOTE     &kp JP_LPAREN  &kp JP_RPAREN  &kp MINUS
+&trans           &trans         &trans    &kp JP_PLUS   &kp JP_ASTERISK  &mkp MB3       &kp JP_UNDERSCORE  &kp JP_AT         &kp SEMICOLON    &kp JP_COLON   &kp SLASH      &kp JP_CARET
+&trans           &trans         &trans    &kp JP_EQUAL  &kp JP_TILDE     &trans         &trans             &kp JP_LBRACKET   &kp JP_RBRACKET  &kp JP_LBRACE  &kp JP_RBRACE  &kp JP_BACKQUOTE
+&trans           &trans         &trans    &trans        &trans           &trans         &trans             &trans                                                           &kp JP_PIPE
             >;
 
             sensor-bindings = <&scroll_up_down>;
